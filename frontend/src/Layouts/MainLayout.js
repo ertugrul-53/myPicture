@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { Outlet, Link } from "react-router-dom";
 import "./MainLayout.css";
 import Stack from "react-bootstrap/Stack";
@@ -9,7 +9,8 @@ import { FormControl } from "react-bootstrap";
 
 
 
-  function MainLayout() { // jsx kodları
+  function MainLayout() { 
+     const [user, setUser] = useState(null);
   return (
 <div className="layout-container" style={{padding:"20px",
                                           fontFamily:"Arial",
@@ -24,9 +25,10 @@ import { FormControl } from "react-bootstrap";
   <Stack direction="horizontal" gap={3}>
                           
         <div className="p-2">
-          <Link  to ="/" style={{textDecoration:"none",color:"black"}}> <h1>myPictures</h1></Link>
-                                  
-       </div>
+          <Link  to ="/" style={{textDecoration:"none",color:"black"}}>
+              <h1>myPictures</h1>
+            </Link>
+          </div>
 
       <div id ="searchBox">
           <FormControl  type="text"
@@ -36,8 +38,9 @@ import { FormControl } from "react-bootstrap";
       </div>
                                
 
-
+      
       <div className="p-2 ms-auto">
+        
         <Link to="/login" style={{textDecoration:"none",color:"black"}}>Giriş</Link>
       </div>
                              

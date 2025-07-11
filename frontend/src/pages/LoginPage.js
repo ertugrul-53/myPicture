@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LoginPage.css';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate =useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,7 +25,7 @@ function LoginPage() {
     const data = await response.json();
 
     if (response.ok) {
-      alert("Giriş başarılı: " + data.username);
+      navigate("/profile");
     } else {
       alert("Hata: " + data.message);
     }
@@ -66,5 +70,6 @@ function LoginPage() {
 );
 
 }
+
 
 export default LoginPage;
