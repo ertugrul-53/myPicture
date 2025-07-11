@@ -1,0 +1,20 @@
+/* RegisterPage.css */
+.register-page {
+  min-height: 100vh;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-box {
+  background: rgba(255, 255, 255, 0.15); /* Şeffaf beyaz */
+  backdrop-filter: blur(10px); /* Bu kısmı bulanıklaştırır */
+  border-radius: 15px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  color: #fff;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}

@@ -1,0 +1,17 @@
+/* HomePage.css */
+.homepage-container {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 1px 1px 4px black;
+  flex-direction: column;
+}
+
+.homepage-container h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}

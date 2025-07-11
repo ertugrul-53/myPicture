@@ -1,15 +1,14 @@
 import express from "express";
 import { getDB } from "../index.js"; 
-
 import bcrypt from "bcryptjs";
 
 const router =express.Router();
 
 router.post("/register",async(req,res)=>{
-    const db =getData()
-    const userColection =db.collection("users");
+    const db =getDB();
+    const userCollection =db.collection("users");
     const{username, password,email}=req.body;
-    const existingUser = await userColection.findOne({email});
+    const existingUser = await userCollection.findOne({email});
     
     if(existingUser){
         return res.status(400).json({message:"bu eposta daha onece kullanıldı "});
@@ -51,4 +50,5 @@ router.post("/register",async(req,res)=>{
   res.json({ message: "Giriş başarılı 🎉", username: user.username });
 });
 
+  
  export default router; 
