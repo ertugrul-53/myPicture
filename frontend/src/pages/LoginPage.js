@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LoginPage.css';
 
@@ -11,23 +11,23 @@ function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log("Giriş bilgileri:", email, password);
-    try{
-       const response = await fetch("http://localhost:5000/api/login", {method : "POST",
-                                                                       header : {"Content-Type":"application/json"},
-                                                                       body: JSON.stringify({email,password})
-                                                                      });
-        const data =await response.json();
-        
-        if(response.ok){
-          alert("giriş başarılı ");
-        }else{
-          alert("başarısızı giriş");
-        }
+    try {
+    const response = await fetch("http://localhost:5000/api/login", {  
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-    }catch(error){
-      alert("sunucuya ulaşılamıyor");
-      console.error(error);
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Giriş başarılı: " + data.username);
+    } else {
+      alert("Hata: " + data.message);
     }
+  } catch (error) {
+    alert("Sunucuya ulaşılamadı!");
+  }
   };
 
   return (

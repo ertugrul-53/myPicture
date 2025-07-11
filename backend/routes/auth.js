@@ -21,16 +21,16 @@ router.post("/register",async(req,res)=>{
                         createAt: new Date()
 };
    
-    await userColection.insertOne(newUser);
+    await userCollection.insertOne(newUser);
     res.status(201).json({message:"kayıt başarılı"});
 
 });
 
     router.post("/login", async (req, res) => {
-  const db = getDB();  // Veritabanına bağlan
-  const usersCollection = db.collection("users"); // "users" koleksiyonunu al
+  const db = getDB();  
+  const usersCollection = db.collection("users"); 
 
-  const { email, password } = req.body; // Kullanıcıdan gelen e-posta ve şifre
+  const { email, password } = req.body; 
 
   // 1. E-posta ile kullanıcıyı bul
   const user = await usersCollection.findOne({ email });
