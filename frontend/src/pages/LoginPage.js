@@ -25,9 +25,13 @@ function LoginPage() {
     const data = await response.json();
 
     if (response.ok) {
-      navigate("/profile");
+      
+      localStorage.setItem("token",data.token);
+      console.log(data);
+      localStorage.setItem("username",data.username);
+      navigate("/main");
     } else {
-      alert("Hata: " + data.message);
+      alert("Hata: " + data.message);   
     }
   } catch (error) {
     alert("Sunucuya ulaşılamadı!");

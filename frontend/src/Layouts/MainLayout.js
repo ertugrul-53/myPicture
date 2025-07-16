@@ -1,6 +1,6 @@
-import React,{useState} from "react";
+import {useState} from "react";
 import { Outlet, Link } from "react-router-dom";
-import "./MainLayout.css";
+
 import Stack from "react-bootstrap/Stack";
 import { FormControl } from "react-bootstrap";
 
@@ -9,8 +9,10 @@ import { FormControl } from "react-bootstrap";
 
 
 
+
   function MainLayout() { 
-     const [user, setUser] = useState(null);
+   
+
   return (
 <div className="layout-container" style={{padding:"20px",
                                           fontFamily:"Arial",
@@ -24,29 +26,26 @@ import { FormControl } from "react-bootstrap";
                        
   <Stack direction="horizontal" gap={3}>
                           
-        <div className="p-2">
-          <Link  to ="/" style={{textDecoration:"none",color:"black"}}>
-              <h1>myPictures</h1>
-            </Link>
-          </div>
-
-      <div id ="searchBox">
-          <FormControl  type="text"
-                        placeholder="Kitap Ara"
+              <div className="p-2">
+                  <Link  to ="/" style={{textDecoration:"none",color:"black"}}>
+                      <h1>myPictures</h1>
+                  </Link>
+              </div>
+              <div id ="searchBox">
+                  <FormControl  type="text"
+                        placeholder="Ara"
                         style={{maxWidth:"300px",margin:"0 auto",position:"static"}}/>
-                                               
-      </div>
+              </div>
                                
 
       
-      <div className="p-2 ms-auto">
-        
-        <Link to="/login" style={{textDecoration:"none",color:"black"}}>Giriş</Link>
-      </div>
+            <div className="p-2 ms-auto">
+                <Link to="/login" style={{textDecoration:"none",color:"black"}}>Giriş</Link>
+            </div>
                              
-      <div className="p-2">
-        <Link  to="/register" style={{textDecoration:"none",color:"black"}}>Kayıt</Link>
-      </div>
+            <div className="p-2">
+                <Link  to="/register" style={{textDecoration:"none",color:"black"}}>Kayıt</Link>
+            </div>
                               
   </Stack>
                        

@@ -1,6 +1,7 @@
 import express from "express";
 import { getDB } from "../index.js"; 
 import bcrypt from "bcryptjs";
+import  jwt from "jsonwebtoken";
 
 const router =express.Router();
 
@@ -26,6 +27,9 @@ router.post("/register",async(req,res)=>{
 
 });
 
+
+
+
     router.post("/login", async (req, res) => {
   const db = getDB();  
   const usersCollection = db.collection("users"); 
@@ -39,15 +43,25 @@ router.post("/register",async(req,res)=>{
     return res.status(400).json({ message: "Kullanıcı bulunamadı" });
   }
 
-  // 2. Şifre doğru mu kontrol et
+  // 2. Şifre doğru mu kontrol 
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
   if (!isPasswordCorrect) {
     return res.status(400).json({ message: "Şifre yanlış" });
   }
 
-  // 3. Giriş başarılı
-  res.json({ message: "Giriş başarılı 🎉", username: user.username });
+
+   const token = jwt.sign({email: user.email,username:user.username},
+                           "key",
+                           {expiresIn:"1m"}             
+   );
+   res.json({
+    message: "Giriş başarılı ",
+    token,
+    username: user.username,
+  });
+
+
 });
 
   
