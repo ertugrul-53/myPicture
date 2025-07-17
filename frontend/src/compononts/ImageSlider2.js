@@ -1,34 +1,33 @@
-import React, { useRef } from "react";
-import "./ImageSlider.css";
+import React from "react";
+import "./ImageSlider2.css";
+import { useRef } from "react";
+
 
 const images = [
-  "/images/img1.jpg",
+  "/images/img8.jpg",
   "/images/img2.jpg",
   "/images/img3.jpg",
   "/images/img4.jpg",
   "/images/img5.jpg",
   "/images/img6.jpg",
   "/images/img7.jpg",
-  "/images/img8.jpg",
-  
+  "/images/img1.jpg",
 ];
 
-export function ImageSlider() {
-  const sliderRef = useRef(null);
 
-  const scrollLeft = () => {
-    sliderRef.current.scrollBy({ left: -200, behavior: "smooth" });
+export function ImageSlider2(){
+        const sliderRef =useRef(null);
+
+        const scrollLeft = () => {
+             sliderRef.current.scrollBy({ left: -200, behavior: "smooth" });
   };
-
-  const scrollRight = () => {
-    sliderRef.current.scrollBy({ left: 200, behavior: "smooth" });
+        const scrollRight = () => {
+            sliderRef.current.scrollBy({ left: 200, behavior: "smooth" });
   };
 
   return (
     <div className="slider-wrapper">
-      <button className="arrow left" onClick={scrollLeft}>
-        &#8249;
-      </button>
+      
 
       <div className="slider-container" ref={sliderRef}>
         {images.map((src, index) => (
@@ -42,12 +41,3 @@ export function ImageSlider() {
     </div>
   );
 }
-
-
-
-
-
-  
-
-export default ImageSlider;
-

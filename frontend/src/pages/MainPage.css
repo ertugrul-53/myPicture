@@ -9,17 +9,7 @@
 }
 
 .ms-auto::after{
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 4
-    
-    
-    0%;
-    height: 2px;
-    background-color: rgb(237, 89, 3);
-    transition: width 0.3s ;
+
 }
 .ms-auto:hover::after {
   width: 100%;

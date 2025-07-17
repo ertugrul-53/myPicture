@@ -5,10 +5,10 @@
   justify-content: center;
   margin: 40px auto;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.15); 
+  background: rgba(255, 255, 255, 0.15); /* saydam beyaz */
   border-radius: 16px;
   max-width: 90%;
-  backdrop-filter: blur(12px); 
+  backdrop-filter: blur(12px); /* BUZLU CAM ETKİSİ */
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -18,11 +18,14 @@
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  
- 
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-
+.slider-container::-webkit-scrollbar {
+  display: none;
+}
 
 .slider-image {
   width: 180px;

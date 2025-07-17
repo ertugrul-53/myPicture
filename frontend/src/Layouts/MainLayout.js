@@ -3,6 +3,8 @@ import { Outlet, Link } from "react-router-dom";
 
 import Stack from "react-bootstrap/Stack";
 import { FormControl } from "react-bootstrap";
+import "./MainLayout.css";
+
 
 
 
@@ -39,13 +41,22 @@ import { FormControl } from "react-bootstrap";
                                
 
       
-            <div className="p-2 ms-auto">
-                <Link to="/login" style={{textDecoration:"none",color:"black"}}>Giriş</Link>
-            </div>
-                             
-            <div className="p-2">
-                <Link  to="/register" style={{textDecoration:"none",color:"black"}}>Kayıt</Link>
-            </div>
+      <div className="ms-auto d-flex">
+          <div className="p-2">
+           <Link to="/login" style={{ textDecoration: "none", color: "black" }}>
+               Giriş
+            </Link>
+     </div>
+
+    <div className="p-2">
+         <Link to="/register" style={{ textDecoration: "none", color: "black" }}>
+             Kayıt
+       </Link>
+   </div>
+    </div>
+
+
+            
                               
   </Stack>
                        

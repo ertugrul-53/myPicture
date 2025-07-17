@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.slider-container {
+  display: flex;
+  overflow-x: auto;       
+  overflow-y: hidden;     
+  gap: 10px;
+  scroll-behavior: smooth;
+  padding: 10px;
+        
+  
+}
+
+
+.slider-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.slider-container::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 4px;
+}
+
+.slider-container::-webkit-scrollbar-track {
+  background-color: #eee;
+}
+
+/* IMG İçin Snap ayarı */
+.slider-container img {
+  scroll-snap-align: center;
+}
+
+/* Görsel kartlar */
+.slider-image {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.slider-image:hover {
+  transform: scale(1.1);
+}
+
+/* Profil alanı */
+.slider-profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.user-profile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}

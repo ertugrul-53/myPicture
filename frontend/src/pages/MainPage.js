@@ -2,38 +2,37 @@
 import { useNavigate } from "react-router-dom";
 import { Link,   } from 'react-router-dom';
 import Stack from "react-bootstrap/Stack";
-import { BsPersonCircle } from "react-icons/bs";
-import  './ProfilePage.css';
+import { BsBox, BsPersonCircle } from "react-icons/bs";
+import  './MainPage.css';
 import { useEffect } from "react";
 import { useState } from "react";
+import { Button, Offcanvas } from "react-bootstrap";
+import PersonImagesSlider from "../compononts/PersonImagesSlider";
 
 
 
 
 
 
-  export default function ProfilePage (){
+  export default function MainPage (){
 
       const navigate = useNavigate();
-
       useEffect(()=>{
           const token =localStorage.getItem("token");
-          
-          if(!token){
+              if(!token){
               alert("token yok ");
               navigate("/login");
           }
-          
-          navigate("/main");
-      },[]);
+         },[]);
 
       const handleLogout  =()=>{
         localStorage.removeItem("token");
         localStorage.removeItem("user");
+        setShow(false);
         navigate("/login");
       }
 
-      //ofcanvass 
+      //ofcanvass
           const[show,setShow]=useState(false);
           const handleClose=()=>  setShow(false);
           const handleShow=()=>setShow(true);
@@ -59,23 +58,45 @@ import { useState } from "react";
                   </Link>
               </div>
               
-              <div className="logout"> <button onClick={handleLogout}>Çıkış Yap</button></div>               
+                            
 
       
             <div className="ms-auto ">
-                <Link to={"/profile"} > 
-                      <BsPersonCircle size={40} color='black'/>
-                </Link>
+               
+               <div onClick={handleShow}>
+                  <BsPersonCircle size={40} color="black" />
+               </div>
+             
+             
+               <Offcanvas show={show} onHide={handleClose} placement="end" >
+                <Offcanvas.Header>
+                    <Offcanvas.Title>myPictures</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                  <Button variant="danger" onClick={handleLogout}>Çıkış Yap</Button>
+
+                </Offcanvas.Body>
+               </Offcanvas>
             </div>
-                             
-           
-                              
   </Stack>
                        
-        <h1>asjdnlsdamşa</h1>
-    <footer style={{marginTop: "40px",fontSize:"10px",color:"#888"}}>
+      
+       
+  <div className="mainPage">
+      <PersonImagesSlider></PersonImagesSlider>
+      <PersonImagesSlider></PersonImagesSlider>
+      <PersonImagesSlider></PersonImagesSlider>
+
+    </div>      
+    
+    
+    
+    
+    
+    
+<footer style={{marginTop: "40px",fontSize:"10px",color:"#888"}}>
         <p>alt kısım bilgileri</p>
-    </footer>
+</footer>
 </div>
   )
 }

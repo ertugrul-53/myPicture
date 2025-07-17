@@ -13,6 +13,8 @@ body{
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
+        
         
 
     }
@@ -25,15 +27,17 @@ body{
         
         
     }
+    
+
     .p-2::after{
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 50%;
-        height: 2px;
-        background-color: rgb(237, 89, 3);
-        transition: width 0.3s;
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 4 0%;
+    height: 2px;
+    background-color: rgb(237, 89, 3);
+    transition: width 0.3s ;
     }
     .p-2:hover::after {
   width: 100%;

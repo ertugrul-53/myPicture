@@ -36,14 +36,14 @@ router.post("/register",async(req,res)=>{
 
   const { email, password } = req.body; 
 
-  // 1. E-posta ile kullanıcıyı bul
+  //  E-posta ile kullanıcıyı bul
   const user = await usersCollection.findOne({ email });
 
   if (!user) {
     return res.status(400).json({ message: "Kullanıcı bulunamadı" });
   }
 
-  // 2. Şifre doğru mu kontrol 
+   
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
   if (!isPasswordCorrect) {

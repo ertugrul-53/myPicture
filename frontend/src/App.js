@@ -4,7 +4,7 @@ import MainLayout from "./Layouts/MainLayout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
+import ProfilePage from "./pages/MainPage";
 
 function App() {
   return (
