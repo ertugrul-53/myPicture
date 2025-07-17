@@ -8,12 +8,60 @@
     
 }
 
+hr{
+  margin: 0%;
+  
+}
+
 .ms-auto::after{
 
 }
 .ms-auto:hover::after {
   width: 100%;
 }
-.ms-auto logout{
-    
+.offcanvas-body{
+  background-color: rgb(234, 41, 7 );
+  backdrop-filter: blur(10px); 
 }
+.offcanvas-header{
+  background-color:rgb(234, 41, 7); 
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  
+}
+.hesabım{
+ text-decoration: none;
+ color: black;
+}
+.hesabım:hover{
+  color: white;
+}
+.ayarlar{
+  text-decoration: none;
+  color: black;
+}
+.ayarlar:hover{
+  color: white;
+}
+.btn.btn-danger{
+  background-color: rgb(0, 0, 0);
+}
+.btn.btn-danger:hover{
+  background-color: white;
+  color: black;
+}
+
+
+
+
+.offcanvas-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;    /* Alt alta dizmek için */
+  justify-content: center;   /* Dikey ortalama */
+  align-items: center;       /* Yatay ortalama */
+  gap: 15px;                 /* Elemanlar arası boşluk */
+  height: 40vh;             /* Container yüksekliği örneğin tam ekran */
+  padding: 0 40px;           /* İstersen sağ sol boşluk */
+}
+
+
