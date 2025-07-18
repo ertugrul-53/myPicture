@@ -28,10 +28,11 @@ export default function PersonImagesSlider({ userId, username }) {
       <div className="slider-profile">
         <img className="user-profile" src="images/logo.png" alt="profil" width={40} height={40} />
         <h5>{username}</h5>
-        <button className="arrow left" onClick={scrollLeft}>
+        
+      </div>
+      <button className="arrow left" onClick={scrollLeft}>
           &#8249;
         </button>
-      </div>
 
       <div className="slider-container" ref={sliderRef} style={{ overflowX: "auto" }}>
         {images.map((src, index) => (

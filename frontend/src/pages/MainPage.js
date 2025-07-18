@@ -5,11 +5,15 @@ import { BsPersonCircle } from "react-icons/bs";
 import './MainPage.css';
 import { useEffect, useState } from "react";
 import { Button, Offcanvas } from "react-bootstrap";
-import PersonImagesSlider from "../compononts/PersonImagesSlider";  // Dizin doğru mu kontrol et
+import PersonImagesSlider from "../compononts/PersonImagesSlider";
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);  // Kullanıcıları tutacak state
+
+  const [users, setUsers] = useState([]);        // Kullanıcılar listesi
+  const [skip, setSkip] = useState(0);           // Kaç kullanıcı atlandı
+  const limit = 5;                               // Her seferde kaç kullanıcı çekilecek
+  const [loading, setLoading] = useState(false); // Yükleniyor durumu
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -19,12 +23,28 @@ export default function MainPage() {
       return;
     }
 
-    // Kullanıcı listesini backend'den çek
-    fetch("http://localhost:5000/api/users?limit=8") // kendi backend endpoint'in
-      .then(res => res.json())
-      .then(data => setUsers(data))
-      .catch(err => console.error("Kullanıcılar alınamadı", err));
+    // İlk kullanıcıları çek
+    fetchUsers(0);
   }, [navigate]);
+
+  // Kullanıcıları çekme fonksiyonu
+  const fetchUsers = (skipCount) => {
+    setLoading(true);
+
+    fetch(`http://localhost:5000/api/users?limit=${limit}&skip=${skipCount}`)
+      .then(res => res.json())
+      .then(data => {
+        
+        if (skipCount === 0) {
+          setUsers(data);  // İlk çekmede direkt set et
+        } else {
+          setUsers(prevUsers => [...prevUsers, ...data]); // Sonrakilerde listeye ekle
+        }
+        setSkip(skipCount + data.length);
+      })
+      .catch(err => console.error("Kullanıcılar alınamadı", err))
+      .finally(() => setLoading(false));
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -38,6 +58,12 @@ export default function MainPage() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // Daha fazla kullanıcı yükle butonuna basınca
+  const loadMoreUsers = () => {
+   
+    fetchUsers(skip);
+  };
+
   return (
     <div className="layout-container" style={{
       padding: "20px",
@@ -50,7 +76,7 @@ export default function MainPage() {
     }}>
       <Stack direction="horizontal" gap={3}>
         <div className="p-2 ">
-          <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+          <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
             <h1>myPictures</h1>
           </Link>
         </div>
@@ -67,7 +93,7 @@ export default function MainPage() {
             <hr />
             <Offcanvas.Body>
               <div className="offcanvas-container">
-                <Link className="hesabım">Hesabım</Link><br />
+                <Link className="hesabım" to ="/profile">Hesabım</Link><br />
                 <Link className="ayarlar">Ayarlar</Link><br />
                 <Button variant="danger" onClick={handleLogout}>Çıkış Yap</Button>
               </div>
@@ -85,6 +111,13 @@ export default function MainPage() {
             username={user.username}
           />
         ))}
+
+        {/* Yükle butonu - yükleniyor ise buton disable */}
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <Button onClick={loadMoreUsers} disabled={loading}>
+            {loading ? "Yükleniyor..." : "Daha Fazla Kullanıcı Yükle ↓"}
+          </Button>
+        </div>
       </div>
 
       <footer style={{ marginTop: "40px", fontSize: "10px", color: "#888" }}>

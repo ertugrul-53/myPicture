@@ -6,6 +6,7 @@ body {
 
 
 .slider-container {
+  flex-grow: 1;  
   display: flex;
   overflow-x: auto;       
   overflow-y: hidden;     
@@ -53,8 +54,11 @@ body {
 .slider-profile {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  padding: 10px;
+  justify-content: flex-start;
+  
+  
+
+
 }
 
 .user-profile {

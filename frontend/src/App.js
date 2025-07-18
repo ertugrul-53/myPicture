@@ -4,7 +4,8 @@ import MainLayout from "./Layouts/MainLayout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/MainPage";
+import MainPage from "./pages/MainPage";
+import ProfilePage from "./pages/profilePage";
 
 function App() {
   return (
@@ -14,8 +15,10 @@ function App() {
               <Route index element ={<HomePage/>}/>
               <Route path="login" element={<LoginPage />} />
               <Route path="register" element={<RegisterPage />} /> 
-            </Route>
-          <Route path="Main" element={<ProfilePage />}></Route>
+              </Route>
+          <Route path="main" element={<MainPage />}></Route>
+          <Route path="profile" element={<ProfilePage/>} />
+          
       </Routes>
     </BrowserRouter>
   );
