@@ -3,19 +3,10 @@ import "./ImageSlider2.css";
 import { useRef } from "react";
 
 
-const images = [
-  "/images/img8.jpg",
-  "/images/img2.jpg",
-  "/images/img3.jpg",
-  "/images/img4.jpg",
-  "/images/img5.jpg",
-  "/images/img6.jpg",
-  "/images/img7.jpg",
-  "/images/img1.jpg",
-];
 
 
-export function ImageSlider2(){
+
+export function ImageSlider2({images}){
         const sliderRef =useRef(null);
 
         const scrollLeft = () => {
@@ -27,12 +18,18 @@ export function ImageSlider2(){
 
   return (
     <div className="slider-wrapper">
-      
+       <button className="arrow left" onClick={scrollLeft}>
+        &#8249;
+      </button>
 
       <div className="slider-container" ref={sliderRef}>
-        {images.map((src, index) => (
-          <img key={index} src={src} alt={`img-${index}`} className="slider-image" />
-        ))}
+       {images && images.length > 0 ? (
+          images.map((src, index) => (
+            <img key={index} src={src} alt={`img-${index}`} className="slider-image" />
+          ))
+        ) : (
+          <p>Gösterilecek fotoğraf yok.</p>
+        )}
       </div>
 
       <button className="arrow right" onClick={scrollRight}>

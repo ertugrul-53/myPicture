@@ -53,7 +53,7 @@ router.post("/register",async(req,res)=>{
 
     const token = jwt.sign(
       { email: user.email, username: user.username },
-      process.env.JWT_SECRET || "key",  // .env dosyasından al, yoksa "key"
+      process.env.JWT_SECRET || "key",  
       { expiresIn: "1h" }
     );
 

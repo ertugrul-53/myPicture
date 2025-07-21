@@ -103,7 +103,7 @@ export default function MainPage() {
       </Stack>
 
       <div className="mainPage" style={{ marginTop: "20px" }}>
-        {/* Kullanıcılar geldikçe slider bileşenlerini render et */}
+        {/* Kullanıcılar geldikçe slider bileşenlerini render etme */}
         {users.map(user => (
           <PersonImagesSlider
             key={user._id}

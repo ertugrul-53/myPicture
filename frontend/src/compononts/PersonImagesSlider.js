@@ -9,7 +9,8 @@ export default function PersonImagesSlider({ userId, username }) {
     fetch(`http://localhost:5000/api/pictures?userId=${userId}&limit=10`)
       .then((res) => res.json())
       .then((data) => {
-        const urls = data.map((pic) => pic.imageUrl);
+        const urls = data.map((pic) => `http://localhost:5000${pic.imagePath}`);
+
         setImages(urls);
       })
       .catch((err) => console.error("Fotoğraflar alınamadı", err));

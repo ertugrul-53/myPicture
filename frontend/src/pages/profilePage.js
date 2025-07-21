@@ -4,10 +4,14 @@ import { Offcanvas } from "react-bootstrap";
 import { BsPersonCircle } from "react-icons/bs";
 import { Button } from "react-bootstrap";
 import { useState } from "react";
+import { useEffect} from "react";
 
 function ProfilePage() {
   const [show, setShow] = useState(false); // Offcanvas için state
+   const [userData, setUserData] = useState(null);
   const navigate = useNavigate(); // Çıkış sonrası yönlendirme için
+
+  
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -16,6 +20,8 @@ function ProfilePage() {
     localStorage.removeItem("token"); // Token'ı temizle
     navigate("/login"); // Login sayfasına yönlendir
   };
+
+  
 
   return (
     <div
@@ -41,6 +47,7 @@ function ProfilePage() {
           <div onClick={handleShow} style={{ cursor: "pointer" }}>
             <BsPersonCircle size={40} color="black" />
           </div>
+          
 
           <Offcanvas show={show} onHide={handleClose} placement="end">
             <Offcanvas.Header closeButton>
@@ -63,6 +70,7 @@ function ProfilePage() {
               </div>
             </Offcanvas.Body>
           </Offcanvas>
+          
         </div>
       </Stack>
     </div>

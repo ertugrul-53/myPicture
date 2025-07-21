@@ -4,12 +4,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./RegisterPage.css"; 
 
 function RegisterPage() {
-  const [username, setUsername] = useState(""); // kullanıcı adı state'i
-  const [email, setEmail] = useState(""); // email state'i
-  const [password, setPassword] = useState(""); // şifre state'i
+  const [username, setUsername] = useState("");          // kullanıcı adı state'i
+  const [email, setEmail] = useState("");               // email state'i
+  const [password, setPassword] = useState("");        // şifre state'i
 
   const handleRegister = async (e) => {
-    e.preventDefault(); // sayfa yenilenmesini engeller
+    e.preventDefault();                                 // sayfa yenilenmesini engeller
     try {
       const response = await fetch("http://localhost:5000/api/register", {  
       method: "POST",
