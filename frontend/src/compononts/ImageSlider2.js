@@ -1,35 +1,38 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./ImageSlider2.css";
-import { useRef } from "react";
 
+const images = [
+  "/images/img1.jpg",
+  "/images/img2.jpg",
+  "/images/img3.jpg",
+  "/images/img4.jpg",
+  "/images/img5.jpg",
+  "/images/img6.jpg",
+  "/images/img7.jpg",
+  "/images/img8.jpg",
+];
 
+ export default function ImageSlider2() {
+  const sliderRef = useRef(null);
 
-
-
-export function ImageSlider2({images}){
-        const sliderRef =useRef(null);
-
-        const scrollLeft = () => {
-             sliderRef.current.scrollBy({ left: -200, behavior: "smooth" });
+  const scrollLeft = () => {
+    sliderRef.current.scrollBy({ left: -200, behavior: "smooth" });
   };
-        const scrollRight = () => {
-            sliderRef.current.scrollBy({ left: 200, behavior: "smooth" });
+
+  const scrollRight = () => {
+    sliderRef.current.scrollBy({ left: 200, behavior: "smooth" });
   };
 
   return (
     <div className="slider-wrapper">
-       <button className="arrow left" onClick={scrollLeft}>
+      <button className="arrow left" onClick={scrollLeft}>
         &#8249;
       </button>
 
       <div className="slider-container" ref={sliderRef}>
-       {images && images.length > 0 ? (
-          images.map((src, index) => (
-            <img key={index} src={src} alt={`img-${index}`} className="slider-image" />
-          ))
-        ) : (
-          <p>Gösterilecek fotoğraf yok.</p>
-        )}
+        {images.map((src, index) => (
+          <img key={index} src={src} alt={`img-${index}`} className="slider-image" />
+        ))}
       </div>
 
       <button className="arrow right" onClick={scrollRight}>
@@ -38,3 +41,5 @@ export function ImageSlider2({images}){
     </div>
   );
 }
+
+

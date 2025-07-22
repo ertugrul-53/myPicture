@@ -1,7 +1,7 @@
 import React from "react";
 import   "./HomePage.css"
 import ImageSlider from "../compononts/ImageSlider";
-import { ImageSlider2 } from "../compononts/ImageSlider2";
+import  ImageSlider2  from "../compononts/ImageSlider2";
 
 
 function HomePage(){
