@@ -1,37 +1,36 @@
-// JWT token işlemleri için jsonwebtoken kütüphanesini içe aktar
 import jwt from "jsonwebtoken";
+import { getDB } from "../index.js";
+import { ObjectId } from "mongodb";
 
-// .env dosyasındaki gizli anahtar gibi verileri okumak için dotenv kütüphanesi
-import dotenv from "dotenv";
-dotenv.config(); // .env dosyasını aktif hâle getirir
+const secretKey = process.env.JWT_SECRET || "gizliAnahtar";
 
-// Middleware fonksiyonu: route'lara erişmeden önce çalışır
-const authMiddleware = (req, res, next) => {
-  // 1. İstek başlığından 'Authorization' değerini al
-  const authHeader = req.headers.authorization;
-
-  // 2. Eğer authorization başlığı yoksa ya da 'Bearer' ile başlamıyorsa hata döndür
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Token bulunamadı veya hatalı formatta" });
-  }
-
-  // 3. 'Bearer <token>' formatındaki token'dan sadece token kısmını al
-  const token = authHeader.split(" ")[1];
-
+export const authMiddleware = async (req, res, next) => {
   try {
-    // 4. Token'ı doğrula (doğruysa içindeki kullanıcı bilgilerini alır)
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+     const authHeader = req.headers["authorization"];
+console.log("Auth Header:", authHeader);
+    if (!authHeader) {
+      return res.status(401).json({ message: "Token bulunamadı" });
+    }
 
-    // 5. decoded objesini req.user içine koy → route'larda kullanıcı bilgisi erişilebilir olur
-    req.user = decoded;
+    const token = authHeader.split(" ")[1];
+console.log("Token:", token);  // EKLENDİ
+    
+    const decoded = jwt.verify(token, secretKey);
 
-    // 6. Bir sonraki middleware ya da route handler'a geç
+console.log("Token:", token);  // EKLENDİ
+    const userId = decoded.userId;
+console.log("Decoded token:", decoded);
+    const db = await getDB();
+    const user = await db.collection("users").findOne({ _id: new ObjectId(userId) });
+
+    if (!user) {
+      return res.status(401).json({ message: "Kullanıcı bulunamadı" });
+    }
+
+    req.user = user;
     next();
   } catch (error) {
-    // Token doğrulanamazsa
-    return res.status(401).json({ message: "Geçersiz token" });
+console.error("Middleware error:", error);
+    return res.status(401).json({ message: "Geçersiz token", error: error.message });
   }
 };
-
-// Bu middleware fonksiyonunu dışa aktar
-export default authMiddleware;

@@ -1,8 +1,15 @@
 import express from "express";
 import { getDB } from "../index.js";
 
+
+
+
 const router = express.Router();
 
+
+
+
+// mainPge deki users kısmı 
 router.get("/", async (req, res) => {
   try {
     const db = getDB();
@@ -23,6 +30,11 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: "Sunucu hatası" });
   }
 });
+
+
+
+
+
 
 
 export default router;

@@ -3,6 +3,12 @@ import { getDB } from "../index.js";
 import bcrypt from "bcryptjs";
 import  jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+
+
+
+
+
+
 dotenv.config();
 
 const router =express.Router();
@@ -52,10 +58,14 @@ router.post("/register",async(req,res)=>{
     }
 
     const token = jwt.sign(
-      { email: user.email, username: user.username },
-      process.env.JWT_SECRET || "key",  
-      { expiresIn: "1h" }
-    );
+  { 
+    userId: user._id.toString(),  
+    email: user.email, 
+    username: user.username 
+  },
+  process.env.JWT_SECRET || "gizliAnahtar",  
+  { expiresIn: "1h" }
+);
 
     await usersCollection.updateOne(
       { email: user.email },

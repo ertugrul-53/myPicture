@@ -3,10 +3,13 @@ import cors from "cors"; // farklı port etkileşimi için
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 
+
 import authRouter from "./routes/auth.js"
 import usersRouter from "./routes/users.js";
 import picturesRouter from "./routes/pictures.js";
 import uploadRouter from "./routes/upload.js";
+import profileRoute from "./routes/profile.js";
+
 
 
 const app =express();
@@ -20,6 +23,7 @@ app.use("/api/pictures", picturesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api",authRouter);
 app.use("/upload", uploadRouter); 
+app.use("/api/profile",profileRoute);
 
 app.use('/upload', express.static('upload'));
 

@@ -4,12 +4,47 @@ import { Offcanvas } from "react-bootstrap";
 import { BsPersonCircle } from "react-icons/bs";
 import { Button } from "react-bootstrap";
 import { useState } from "react";
-import { useEffect} from "react";
+import React from "react";
+import { useEffect } from "react";
+
 
 function ProfilePage() {
   const [show, setShow] = useState(false); // Offcanvas için state
    const [userData, setUserData] = useState(null);
   const navigate = useNavigate(); // Çıkış sonrası yönlendirme için
+
+
+useEffect(() => {
+  const fetchUserData = async () => {
+    const token = localStorage.getItem("token");
+    
+
+    try {
+      const response = await fetch("http://localhost:5000/api/profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Token'ı başlığa ekliyoruz
+        },
+      });
+      
+
+      if (!response.ok) {
+        throw new Error("Kullanıcı verisi alınamadı");
+      }
+
+      const data = await response.json();
+      setUserData(data); // State'e veriyi yaz
+    } catch (error) {
+      console.error("Veri alma hatası:", error.message);
+    }
+  };
+  
+
+  fetchUserData();
+}, []);
+
+  
 
   
 
@@ -20,6 +55,9 @@ function ProfilePage() {
     localStorage.removeItem("token"); // Token'ı temizle
     navigate("/login"); // Login sayfasına yönlendir
   };
+
+  
+  
 
   
 
@@ -39,7 +77,8 @@ function ProfilePage() {
       <Stack direction="horizontal" gap={3}>
         <div className="p-2">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
-            <h1>myPictures</h1>
+            <h1>{userData?.username}</h1>
+            
           </Link>
         </div>
 
