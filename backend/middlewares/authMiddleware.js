@@ -1,25 +1,37 @@
-//token doğrulama
+// JWT token işlemleri için jsonwebtoken kütüphanesini içe aktar
+import jwt from "jsonwebtoken";
 
-import { Jwt } from "jsonwebtoken";
+// .env dosyasındaki gizli anahtar gibi verileri okumak için dotenv kütüphanesi
+import dotenv from "dotenv";
+dotenv.config(); // .env dosyasını aktif hâle getirir
 
-//middleWare fonksiyonu
-const authMiddleWare =(req,res,next)=>{
+// Middleware fonksiyonu: route'lara erişmeden önce çalışır
+const authMiddleware = (req, res, next) => {
+  // 1. İstek başlığından 'Authorization' değerini al
+  const authHeader = req.headers.authorization;
 
-    const authHeader = req.heades.authorization;
+  // 2. Eğer authorization başlığı yoksa ya da 'Bearer' ile başlamıyorsa hata döndür
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Token bulunamadı veya hatalı formatta" });
+  }
 
-    if(!authorization || authorization.startWith('Bearer')){
-        return res.status(404).json({mesage:'Token bulunamadı  '});
+  // 3. 'Bearer <token>' formatındaki token'dan sadece token kısmını al
+  const token = authHeader.split(" ")[1];
 
-    }
-    const token = authHeader.split(" ")[1]; //Barear dan sonra gelen boşlukdan sonrasının alırız (gerçek token için )
+  try {
+    // 4. Token'ı doğrula (doğruysa içindeki kullanıcı bilgilerini alır)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    try{
-        const decoded =fwt.verify(token,"gizli anahtar");
-        req.user=decoded;
-        next();
+    // 5. decoded objesini req.user içine koy → route'larda kullanıcı bilgisi erişilebilir olur
+    req.user = decoded;
 
-    }catch(error){
-        return res.status(401).json({message: "geçersiz token"});
-    }
-}
-export default authMiddleWare;
+    // 6. Bir sonraki middleware ya da route handler'a geç
+    next();
+  } catch (error) {
+    // Token doğrulanamazsa
+    return res.status(401).json({ message: "Geçersiz token" });
+  }
+};
+
+// Bu middleware fonksiyonunu dışa aktar
+export default authMiddleware;
