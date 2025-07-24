@@ -22,9 +22,8 @@ app.use(express.json());
 app.use("/api/pictures", picturesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api",authRouter);
-app.use("/upload", uploadRouter); 
+app.use("/api/upload", uploadRouter);
 app.use("/api/profile",profileRoute);
-
 app.use('/upload', express.static('upload'));
 
 

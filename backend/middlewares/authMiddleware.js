@@ -13,15 +13,17 @@ console.log("Auth Header:", authHeader);
     }
 
     const token = authHeader.split(" ")[1];
-console.log("Token:", token);  // EKLENDİ
+
     
     const decoded = jwt.verify(token, secretKey);
 
-console.log("Token:", token);  // EKLENDİ
+
     const userId = decoded.userId;
-console.log("Decoded token:", decoded);
+     console.log("Decoded token userId:", userId);
+
     const db = await getDB();
     const user = await db.collection("users").findOne({ _id: new ObjectId(userId) });
+     console.log("User from DB:", user);
 
     if (!user) {
       return res.status(401).json({ message: "Kullanıcı bulunamadı" });
