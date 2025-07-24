@@ -15,6 +15,8 @@ export default function MainPage() {
   const limit = 5;                               // Her seferde kaç kullanıcı çekilecek
   const [loading, setLoading] = useState(false); // Yükleniyor durumu
 
+  
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -34,7 +36,7 @@ export default function MainPage() {
     fetch(`http://localhost:5000/api/users?limit=${limit}&skip=${skipCount}`)
       .then(res => res.json())
       .then(data => {
-        
+
         if (skipCount === 0) {
           setUsers(data);  // İlk çekmede direkt set et
         } else {

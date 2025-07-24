@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";  // doğru import burada
 
-function UploadPhotoForm({ onUploadSuccess, userId }) {
+function UploadPhotoForm({ onUploadSuccess }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [message, setMessage] = useState("");
 
@@ -9,48 +10,52 @@ function UploadPhotoForm({ onUploadSuccess, userId }) {
     setSelectedFile(e.target.files[0]);
   };
 
-                  const handleUpload = async () => {
-                    if (!selectedFile) {
-                      setMessage("Lütfen bir dosya seçin.");
-                      return;
-                    }
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      setMessage("Lütfen bir dosya seçin.");
+      return;
+    }
 
-                    // userId props olarak yoksa localStorage’dan al
-                    const currentUserId = userId || localStorage.getItem("userId");
-                    if (!currentUserId) {
-                      setMessage("Kullanıcı bilgisi bulunamadı.");
-                      return;
-                    }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setMessage("Kullanıcı giriş yapmamış.");
+      return;
+    }
 
-                    const formData = new FormData();
-                    formData.append("photo", selectedFile);
-                    formData.append("userId", currentUserId);
+    let currentUserId;
+    try {
+      const decoded = jwtDecode(token);
+      currentUserId = decoded.userId;
+    } catch (error) {
+      console.error("Token çözümleme hatası:", error);
+      setMessage("Geçersiz kullanıcı token’ı.");
+      return;
+    }
 
-                    try {
-                      const token = localStorage.getItem("token");
-                      if (!token) {
-                        setMessage("Kullanıcı giriş yapmamış.");
-                        return;
-                      }
+    const formData = new FormData();
+    formData.append("photo", selectedFile);
+    formData.append("userId", currentUserId);
 
-                      const response = await axios.post("http://localhost:5000/api/upload", formData, {
-                        headers: {
-                          "Content-Type": "multipart/form-data",
-                          Authorization: `Bearer ${token}`,
-                        },
-                      });
-                      console.log("Upload response:", response);
+    try {
+      const response = await axios.post("http://localhost:5000/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-                      setMessage("Yükleme başarılı: " + response.data.picture.imagePath);
+      console.log("Upload response:", response);
 
-                      if (onUploadSuccess) {
-                        await onUploadSuccess();
-                      }
-                    } catch (err) {
-                      console.error(err);
-                      setMessage("Yükleme başarısız.");
-                    }
-                  };
+      if (onUploadSuccess) {
+        await onUploadSuccess(); // yükleme başarılıysa üst componente bildir
+      }
+
+      setMessage("Yükleme başarılı.");
+    } catch (err) {
+      console.error("Yükleme hatası:", err);
+      setMessage("Yükleme başarısız.");
+    }
+  };
 
   return (
     <div className="upload-form">

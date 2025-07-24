@@ -6,10 +6,13 @@ import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import MainPage from "./pages/MainPage";
 import ProfilePage from "./pages/profilePage";
+import { PhotoProvider } from "./contexts/PhotoContext";
 
 function App() {
   return (
-    <BrowserRouter>
+
+     <PhotoProvider>
+      <BrowserRouter>
       <Routes>
             <Route path="/" element={<MainLayout />}>
               <Route index element ={<HomePage/>}/>
@@ -21,6 +24,8 @@ function App() {
           
       </Routes>
     </BrowserRouter>
+    </PhotoProvider>
+    
   );
 }
 
