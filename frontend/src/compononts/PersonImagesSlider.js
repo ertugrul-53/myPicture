@@ -6,7 +6,7 @@ export default function PersonImagesSlider({ userId, username }) {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/pictures?userId=${userId}&limit=10`)
+    fetch(`http://localhost:5000/api/pictures?userId=${userId}&limit=20`)
       .then((res) => res.json())
       .then((data) => {
         const urls = data.map((pic) => `http://localhost:5000${pic.imagePath}`);
