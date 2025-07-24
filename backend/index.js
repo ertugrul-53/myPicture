@@ -9,6 +9,7 @@ import usersRouter from "./routes/users.js";
 import picturesRouter from "./routes/pictures.js";
 import uploadRouter from "./routes/upload.js";
 import profileRoute from "./routes/profile.js";
+import deletePhotoRoute from "./routes/deletePhoto.js"
 
 
 
@@ -25,6 +26,7 @@ app.use("/api",authRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/profile",profileRoute);
 app.use('/upload', express.static('upload'));
+app.use("/api", deletePhotoRoute)
 
 
 

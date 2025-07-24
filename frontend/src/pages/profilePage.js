@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Stack, Offcanvas, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
-import UploadPhotoForm from "../compononts/UploadPhotoForm.js"; // Doğruysa bu kalsın
+import UploadPhotoForm from "../compononts/UploadPhotoForm.js";
+import "./profilePage.css";
 
 function ProfilePage() {
   const [show, setShow] = useState(false);
@@ -46,7 +47,6 @@ function ProfilePage() {
       if (!response.ok) throw new Error("Fotoğraflar alınamadı");
 
       const photosData = await response.json();
-      console.log("Photos data:", photosData);
       setPhotos(photosData);
     } catch (error) {
       console.error("Fotoğraf alma hatası:", error.message);
@@ -64,6 +64,27 @@ function ProfilePage() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
+  };
+
+  // Fotoğraf silme fonksiyonu
+  const handleDelete = async (photoId) => {
+    if (!window.confirm("Bu fotoğrafı silmek istediğinize emin misiniz?")) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/delete-photo/${photoId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("Silme işlemi başarısız");
+
+      // Silme başarılı, fotoğraf listesini güncelle
+      setPhotos((prevPhotos) => prevPhotos.filter((p) => p._id !== photoId));
+    } catch (error) {
+      console.error("Fotoğraf silme hatası:", error);
+      alert("Fotoğraf silme işlemi başarısız.");
+    }
   };
 
   return (
@@ -119,7 +140,6 @@ function ProfilePage() {
       {/* Fotoğraf Yükleme Bileşeni */}
       <UploadPhotoForm onUploadSuccess={fetchPhotos} userId={userData?._id} />
 
-
       {/* Fotoğraflar */}
       <div style={{ marginTop: "20px" }}>
         <h2>Paylaşılan Fotoğraflar</h2>
@@ -128,17 +148,36 @@ function ProfilePage() {
         ) : (
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
             {photos.map((photo) => (
-              <img
-                key={photo._id}
-                src={`http://localhost:5000${photo.imagePath}`}
-                alt="User photo"
-                style={{
-                  width: "150px",
-                  height: "150px",
-                  objectFit: "cover",
-                  borderRadius: "8px",
-                }}
-              />
+              <div key={photo._id} style={{ position: "relative" }}>
+                <img
+                  src={`http://localhost:5000${photo.imagePath}`}
+                  alt="User photo"
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                  }}
+                />
+                <button
+                  onClick={() => handleDelete(photo._id)}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "5px",
+                    backgroundColor: "rgba(5, 2, 2, 0.7)",
+                    border: "none",
+                    color: "white",
+                    borderRadius: "50%",
+                    width: "25px",
+                    height: "25px",
+                    cursor: "pointer",
+                  }}
+                  title="Fotoğrafı sil"
+                >
+                  ×
+                </button>
+              </div>
             ))}
           </div>
         )}

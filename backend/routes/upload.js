@@ -3,6 +3,9 @@ import multer from "multer";
 import { getDB } from "../index.js";
 import { ObjectId } from "mongodb";
 import { authMiddleware } from "../middlewares/authMiddleware.js"; // middleware'i import et
+import fs from "fs";
+import path from "path";
+
 
 const router = express.Router();
 
@@ -56,5 +59,8 @@ router.post("/", authMiddleware, upload.single("photo"), async (req, res) => {
     res.status(500).json({ success: false, message: "Sunucu hatası", error: error.message });
   }
 });
+
+
+
 
 export default router;

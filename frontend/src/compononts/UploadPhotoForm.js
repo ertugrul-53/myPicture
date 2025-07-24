@@ -57,6 +57,30 @@ function UploadPhotoForm({ onUploadSuccess }) {
     }
   };
 
+  
+  function handleDelete(photoId) {
+  axios.delete(`http://localhost:3000/api/delete-photo/${photoId}`)
+    .then(res => {
+      console.log("Silindi:", res.data);
+      // UI'den kaldır (örneğin useState ile filtreleme)
+    })
+    .catch(err => {
+      console.error("Silme hatası:", err);
+    });
+}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   return (
     <div className="upload-form">
       <input type="file" onChange={handleFileChange} />
