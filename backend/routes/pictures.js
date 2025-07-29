@@ -1,3 +1,4 @@
+// fotoğrafları listelemek için routlar
 import express from "express";
 import { ObjectId } from "mongodb";
 import { getDB } from "../index.js";

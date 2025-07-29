@@ -67,10 +67,14 @@ export default function MainPage() {
   };
 
   return (
+          
     <div className="layout-container" style={{
       padding: "20px",
       fontFamily: "Arial",
-      backgroundImage: "url('/images/br4.jpg')",
+       backgroundImage: `
+      linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.3)), 
+      "url('/images/br4.jpg'),
+    `,
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
       backgroundPosition: "center",
@@ -122,6 +126,12 @@ export default function MainPage() {
         </div>
       </div>
 
+     
+     
+     
+     
+     
+     
       <footer style={{ marginTop: "40px", fontSize: "10px", color: "#888" }}>
         <p>alt kısım bilgileri</p>
       </footer>

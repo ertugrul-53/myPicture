@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Stack, Offcanvas, Button } from "react-bootstrap";
+import { Stack, Offcanvas, Button, FormSelect } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
 import UploadPhotoForm from "../compononts/UploadPhotoForm.js";
 import "./profilePage.css";
+
+import Form from 'react-bootstrap/Form';
 
 function ProfilePage() {
   const [show, setShow] = useState(false);
@@ -93,52 +95,53 @@ function ProfilePage() {
       style={{
         padding: "20px",
         fontFamily: "Arial",
-        backgroundImage: "url('/images/backround.jpg')",
+       
+   /*    backgroundImage: `
+      linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
+      url('/images/backround.jpg')
+    `,*/
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
+        
         minHeight: "100vh",
       }}
     >
       {/* Üst Menü */}
-      <Stack direction="horizontal" gap={3}>
+      <Stack direction="horizontal" gap={3} className="align-items-center">
         <div className="p-2">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
             <h1>{userData?.username}</h1>
           </Link>
         </div>
 
-        <div className="ms-auto">
+        <div className="ms-auto d-flex align-items-center" style={{ gap: "40px" }}>
+          
+          {/* Fotoğraf Yükleme Bileşeni */}
+              <UploadPhotoForm onUploadSuccess={fetchPhotos} userId={userData?._id} />
+              
           <div onClick={handleShow} style={{ cursor: "pointer" }}>
-            <BsPersonCircle size={40} color="black" />
+            <BsPersonCircle size={50} color="black" />
           </div>
-
-          <Offcanvas show={show} onHide={handleClose} placement="end">
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title>myPictures</Offcanvas.Title>
-            </Offcanvas.Header>
-            <hr />
-            <Offcanvas.Body>
-              <div className="offcanvas-container">
-                <Link className="hesabım" to="/profile">
-                  Hesabım
-                </Link>
-                <br />
-                <Link className="ayarlar" to="#">
-                  Ayarlar
-                </Link>
-                <br />
-                <Button variant="danger" onClick={handleLogout}>
-                  Çıkış Yap
-                </Button>
-              </div>
-            </Offcanvas.Body>
-          </Offcanvas>
         </div>
-      </Stack>
 
-      {/* Fotoğraf Yükleme Bileşeni */}
-      <UploadPhotoForm onUploadSuccess={fetchPhotos} userId={userData?._id} />
+        <Offcanvas show={show} onHide={handleClose} placement="end">
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>myPictures</Offcanvas.Title>
+          </Offcanvas.Header>
+          <hr />
+          <Offcanvas.Body>
+            <div className="offcanvas-container">
+              <Link className="hesabım" to="/profile">Hesabım</Link><br />
+              <Link className="ayarlar" to="#">Ayarlar</Link><br />
+              <Button variant="danger" onClick={handleLogout}>Çıkış Yap</Button>
+            </div>
+          </Offcanvas.Body>
+        </Offcanvas>
+      </Stack>
+      <hr />
+
+     
 
       {/* Fotoğraflar */}
       <div style={{ marginTop: "20px" }}>
@@ -146,33 +149,22 @@ function ProfilePage() {
         {photos.length === 0 ? (
           <p>Henüz fotoğraf yok.</p>
         ) : (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          <div className="Photos" style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
             {photos.map((photo) => (
-              <div key={photo._id} style={{ position: "relative" }}>
+              <div key={photo._id} className="photo-container" style={{ position: "relative" }}>
                 <img
                   src={`http://localhost:5000${photo.imagePath}`}
                   alt="User photo"
                   style={{
-                    width: "150px",
-                    height: "150px",
+                    width: "300px",
+                    height: "300px",
                     objectFit: "cover",
                     borderRadius: "8px",
                   }}
                 />
                 <button
                   onClick={() => handleDelete(photo._id)}
-                  style={{
-                    position: "absolute",
-                    top: "5px",
-                    right: "5px",
-                    backgroundColor: "rgba(5, 2, 2, 0.7)",
-                    border: "none",
-                    color: "white",
-                    borderRadius: "50%",
-                    width: "25px",
-                    height: "25px",
-                    cursor: "pointer",
-                  }}
+                  className="delete-button"
                   title="Fotoğrafı sil"
                 >
                   ×

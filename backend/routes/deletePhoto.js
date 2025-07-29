@@ -29,10 +29,10 @@ router.delete("/delete-photo/:id", authMiddleware, async (req, res) => {
       return res.status(403).json({ success: false, message: "Bu fotoğrafı silme yetkiniz yok" });
     }
 
-    // Veritabanından sil
+    // Database  den  silme
     await picturesCollection.deleteOne({ _id: new ObjectId(photoId) });
 
-    // Dosya sisteminden sil (dosya yolu backend projenin kökünden başlayarak)
+    // Dosya sisteminden silme
     const filePath = path.join(process.cwd(), photo.imagePath);
     fs.unlink(filePath, (err) => {
       if (err) {

@@ -8,12 +8,12 @@ import path from "path";
 
 
 const router = express.Router();
-
+// 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (req, file, cb) => {// fotonun hangi dosyaya yükleneceği 
     cb(null, "upload/");
   },
-  filename: (req, file, cb) => {
+  filename: (req, file, cb) => {// yüklenen dosyaınn adını zman damgasıyla eşsi yapma 
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
@@ -23,13 +23,13 @@ const upload = multer({ storage });
 
 
   
-// Burada önce token doğrulaması yapıyoruz, sonra dosya yükleme
+
 router.post("/", authMiddleware, upload.single("photo"), async (req, res) => {
   console.log("upload endpoint çağrıldı");
-  console.log("Token’dan gelen user:", req.user);  // req.user burada geliyor
+  console.log("Token’dan gelen user:", req.user); 
   console.log("Gelen dosya:", req.file);
 
-  const userId = req.user._id;  // token doğrulandıktan sonra user objesi burada
+  const userId = req.user._id;  // token doğrulandıktan sonra user objesi 
   const file = req.file;
 
   if (!userId || !ObjectId.isValid(userId)) {
@@ -45,7 +45,7 @@ router.post("/", authMiddleware, upload.single("photo"), async (req, res) => {
 
     const imagePath = "/upload/" + file.filename;
 
-    const newPicture = {
+    const newPicture = { // fotagraf yükleyen kiişyi belirleme
       userId: new ObjectId(userId),
       imagePath,
       createAt: new Date(),

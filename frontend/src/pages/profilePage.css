@@ -1,0 +1,53 @@
+
+.FormSelect {
+  background-color: white;
+  color: rgba(245, 82, 0, 0.701);
+  height: 32px;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  width: 150px;
+  transition: 0.15s;
+}
+
+.FormSelect:hover{
+    color: white;
+    background-color:rgba(245, 82, 0, 0.701);
+}
+
+
+
+
+hr{
+     color: rgba(245, 82, 0, 0.701);
+}
+.photo-container {
+  position: relative;
+  display: inline-block;
+  transition-duration: 0.2s;
+}
+.photo-container:hover{
+  transform: scale(1.2);
+  z-index: 1;
+  
+}
+
+
+.photo-container button {
+  opacity: 0;                      
+  transition: opacity 0.3s ease;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(5, 2, 2, 0.7);
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.photo-container:hover button {
+  opacity: 1;
+}

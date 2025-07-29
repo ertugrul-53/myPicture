@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./PersonImagesSlider.css";
 
+
+
+
+
+
 export default function PersonImagesSlider({ userId, username }) {
   const sliderRef = useRef(null);
   const [images, setImages] = useState([]);
@@ -25,6 +30,8 @@ export default function PersonImagesSlider({ userId, username }) {
   };
 
   return (
+
+
     <div className="slider-wrapper">
       <div className="slider-profile">
         <img className="user-profile" src="images/logo.png" alt="profil" width={40} height={40} />
@@ -45,5 +52,10 @@ export default function PersonImagesSlider({ userId, username }) {
         &#8250;
       </button>
     </div>
+
+
   );
 }
+
+
+

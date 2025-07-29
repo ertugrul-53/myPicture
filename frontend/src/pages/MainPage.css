@@ -20,11 +20,11 @@ hr{
   width: 100%;
 }
 .offcanvas-body{
-  background-color: rgb(234, 41, 7 );
+  background-color: rgb(241, 241, 241);
   backdrop-filter: blur(10px); 
 }
 .offcanvas-header{
-  background-color:rgb(234, 41, 7); 
+  background-color:rgb(214, 209, 208); 
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   
 }
@@ -33,14 +33,14 @@ hr{
  color: black;
 }
 .hesabım:hover{
-  color: white;
+  color: rgb(218, 83, 16);
 }
 .ayarlar{
   text-decoration: none;
   color: black;
 }
 .ayarlar:hover{
-  color: white;
+  color:  rgb(218, 83, 16);
 }
 .btn.btn-danger{
   background-color: rgb(0, 0, 0);
@@ -62,6 +62,9 @@ hr{
   gap: 15px;                 /* Elemanlar arası boşluk */
   height: 40vh;             /* Container yüksekliği örneğin tam ekran */
   padding: 0 40px;           /* İstersen sağ sol boşluk */
+}
+.user-slider{
+  margin-top: 20%;
 }
 
 
