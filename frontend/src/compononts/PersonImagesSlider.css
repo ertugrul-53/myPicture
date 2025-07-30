@@ -1,73 +1,103 @@
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-
-.slider-container {
-  flex-grow: 1;  
-  display: flex;
-  overflow-x: auto;       
-  overflow-y: hidden;     
-  gap: 10px;
-  scroll-behavior: smooth;
-  padding: 10px;
-        
-  
-}
-
-
-.slider-container::-webkit-scrollbar {
-  height: 8px;
-}
-
-.slider-container::-webkit-scrollbar-thumb {
-  background-color: #aaa;
-  border-radius: 4px;
-}
-
-.slider-container::-webkit-scrollbar-track {
-  background-color: #eee;
-}
-
-/* IMG İçin Snap ayarı */
-.slider-container img {
-  scroll-snap-align: center;
-}
-
-/* Görsel kartlar */
-.slider-image {
-  width: 200px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
-  transition: transform 0.2s;
-}
-
-.slider-image:hover {
-  transform: scale(1.1);
-}
-
-/* Profil alanı */
-.slider-profile {
+.slider-wrapper-person {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  
-  
-
-
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
 }
 
-.user-profile {
+.slider-container-person {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slider-container-person.active {
+  justify-content: center;
+}
+
+.slider-container-person.inactive {
+  justify-content: flex-start;
+  opacity: 1;
+  filter: grayscale(30%);
+}
+
+.slider-image-person {
+  border-radius: 10px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.slider-image-person.active {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0);
+  user-select: none;
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
+}
+
+.slider-image-person.inactive {
+  width: 240px;
+  height: 200px;
+  filter: grayscale(30%);
+  user-select: none;
+  pointer-events: none;
+  opacity: 1;
+ 
+}
+
+/* Küçük profil fotoğrafı yan kullanıcılar için */
+.user-profile-small {
+  border-radius: 50%;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+  margin-bottom: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 6px rgba(0,0,0,0.25);
 }
-button{
-  margin-left: 20px;
-  margin-right: 20px;
+
+.arrow {
+  background: rgba(0, 0, 0, 0.25);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  border-radius: 50%;
+  user-select: none;
+  transition: background 0.3s ease;
+}
+
+.arrow:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.arrow.left {
+  left: 10px;
+}
+
+.arrow.right {
+  right: 10px;
+}
+
+.no-images {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
 }

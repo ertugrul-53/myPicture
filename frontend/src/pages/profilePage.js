@@ -95,15 +95,11 @@ function ProfilePage() {
       style={{
         padding: "20px",
         fontFamily: "Arial",
-       
-   /*    backgroundImage: `
-      linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
-      url('/images/backround.jpg')
-    `,*/
+        backgroundImage: "url('/images/br-Grey6.jpg')",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        
+
         minHeight: "100vh",
       }}
     >
@@ -116,10 +112,10 @@ function ProfilePage() {
         </div>
 
         <div className="ms-auto d-flex align-items-center" style={{ gap: "40px" }}>
-          
+
           {/* Fotoğraf Yükleme Bileşeni */}
-              <UploadPhotoForm onUploadSuccess={fetchPhotos} userId={userData?._id} />
-              
+          <UploadPhotoForm onUploadSuccess={fetchPhotos} userId={userData?._id} />
+
           <div onClick={handleShow} style={{ cursor: "pointer" }}>
             <BsPersonCircle size={50} color="black" />
           </div>
@@ -141,15 +137,15 @@ function ProfilePage() {
       </Stack>
       <hr />
 
-     
+
 
       {/* Fotoğraflar */}
       <div style={{ marginTop: "20px" }}>
-        <h2>Paylaşılan Fotoğraflar</h2>
+
         {photos.length === 0 ? (
           <p>Henüz fotoğraf yok.</p>
         ) : (
-          <div className="Photos" style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          <div className="Photos" style={{ display: "flex", flexWrap: "wrap", gap: "30px" }}>
             {photos.map((photo) => (
               <div key={photo._id} className="photo-container" style={{ position: "relative" }}>
                 <img

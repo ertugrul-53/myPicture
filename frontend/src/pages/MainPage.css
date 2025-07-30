@@ -1,70 +1,132 @@
 .ms-auto {
-    position: relative;
-    text-decoration: none;
-    padding-right: 30px;
-    transition: 0.3s;
-    padding-bottom: 10px;
-     
-    
+  position: relative;
+  text-decoration: none;
+  padding-right: 30px;
+  transition: 0.3s;
+  padding-bottom: 10px;
 }
 
-hr{
+hr {
   margin: 0%;
-  
 }
 
-.ms-auto::after{
+.ms-auto::after {}
 
-}
 .ms-auto:hover::after {
   width: 100%;
 }
-.offcanvas-body{
+
+.offcanvas-body {
   background-color: rgb(241, 241, 241);
-  backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px);
 }
-.offcanvas-header{
-  background-color:rgb(214, 209, 208); 
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  
+
+.offcanvas-header {
+  background-color: rgb(214, 209, 208);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
-.hesabım{
- text-decoration: none;
- color: black;
-}
-.hesabım:hover{
-  color: rgb(218, 83, 16);
-}
-.ayarlar{
+
+.hesabım {
   text-decoration: none;
   color: black;
 }
-.ayarlar:hover{
-  color:  rgb(218, 83, 16);
+
+.hesabım:hover {
+  color: rgb(218, 83, 16);
 }
-.btn.btn-danger{
+
+.ayarlar {
+  text-decoration: none;
+  color: black;
+}
+
+.ayarlar:hover {
+  color: rgb(218, 83, 16);
+}
+
+.btn.btn-danger {
   background-color: rgb(0, 0, 0);
 }
-.btn.btn-danger:hover{
+
+.btn.btn-danger:hover {
   background-color: white;
   color: black;
 }
 
-
-
-
 .offcanvas-container {
   position: relative;
   display: flex;
-  flex-direction: column;    /* Alt alta dizmek için */
-  justify-content: center;   /* Dikey ortalama */
-  align-items: center;       /* Yatay ortalama */
-  gap: 15px;                 /* Elemanlar arası boşluk */
-  height: 40vh;             /* Container yüksekliği örneğin tam ekran */
-  padding: 0 40px;           /* İstersen sağ sol boşluk */
-}
-.user-slider{
-  margin-top: 20%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  height: 40vh;
+  padding: 0 40px;
 }
 
+.user-carousel-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+}
 
+.user-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 140px;
+  opacity: 0.7;
+  filter: grayscale(30%);
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.user-preview:hover {
+  opacity: 1;
+  filter: none;
+}
+
+.user-preview p {
+  margin: 5px 0;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  word-break: break-word;
+}
+
+.user-active {
+  position: relative;
+  width: 500px;
+  height: 320px;
+  padding: 0;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-profile-info {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-profile-info img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+}
+
+.user-profile-info p {
+  font-weight: bold;
+  margin-top: 8px;
+  color: #222;
+}

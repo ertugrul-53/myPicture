@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import Stack from "react-bootstrap/Stack";
 import { BsPersonCircle } from "react-icons/bs";
-import './MainPage.css';
+import "./MainPage.css";
 import { useEffect, useState } from "react";
 import { Button, Offcanvas } from "react-bootstrap";
 import PersonImagesSlider from "../compononts/PersonImagesSlider";
@@ -10,43 +10,24 @@ import PersonImagesSlider from "../compononts/PersonImagesSlider";
 export default function MainPage() {
   const navigate = useNavigate();
 
-  const [users, setUsers] = useState([]);        // Kullanıcılar listesi
-  const [skip, setSkip] = useState(0);           // Kaç kullanıcı atlandı
-  const limit = 5;                               // Her seferde kaç kullanıcı çekilecek
-  const [loading, setLoading] = useState(false); // Yükleniyor durumu
+  const [users, setUsers] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  
+  const limit = 10;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("token yok ");
+      alert("token yok");
       navigate("/login");
       return;
     }
 
-    // İlk kullanıcıları çek
-    fetchUsers(0);
+    fetch(`http://localhost:5000/api/users?limit=${limit}`)
+      .then((res) => res.json())
+      .then((data) => setUsers(data))
+      .catch((err) => console.error("Kullanıcılar alınamadı", err));
   }, [navigate]);
-
-  // Kullanıcıları çekme fonksiyonu
-  const fetchUsers = (skipCount) => {
-    setLoading(true);
-
-    fetch(`http://localhost:5000/api/users?limit=${limit}&skip=${skipCount}`)
-      .then(res => res.json())
-      .then(data => {
-
-        if (skipCount === 0) {
-          setUsers(data);  // İlk çekmede direkt set et
-        } else {
-          setUsers(prevUsers => [...prevUsers, ...data]); // Sonrakilerde listeye ekle
-        }
-        setSkip(skipCount + data.length);
-      })
-      .catch(err => console.error("Kullanıcılar alınamadı", err))
-      .finally(() => setLoading(false));
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -55,31 +36,30 @@ export default function MainPage() {
     navigate("/login");
   };
 
-  // Offcanvas kontrolü
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // Daha fazla kullanıcı yükle butonuna basınca
-  const loadMoreUsers = () => {
-   
-    fetchUsers(skip);
+  const prevUser = () => {
+    setActiveIndex((old) => (old === 0 ? users.length - 1 : old - 1));
+  };
+  const nextUser = () => {
+    setActiveIndex((old) => (old === users.length - 1 ? 0 : old + 1));
   };
 
   return (
-          
-    <div className="layout-container" style={{
-      padding: "20px",
-      fontFamily: "Arial",
-       backgroundImage: `
-      linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.3)), 
-      "url('/images/br4.jpg'),
-    `,
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat",
-      backgroundPosition: "center",
-      minHeight: "100vh",
-    }}>
+    <div
+      className="layout-container"
+      style={{
+        padding: "20px",
+        fontFamily: "Arial",
+        backgroundImage: "url('/images/br-Grey6.jpg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+      }}
+    >
       <Stack direction="horizontal" gap={3}>
         <div className="p-2 ">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
@@ -92,49 +72,136 @@ export default function MainPage() {
             <BsPersonCircle size={40} color="black" />
           </div>
 
-          <Offcanvas show={show} onHide={handleClose} placement="end" >
+          <Offcanvas show={show} onHide={handleClose} placement="end">
             <Offcanvas.Header>
               <Offcanvas.Title>myPictures</Offcanvas.Title>
             </Offcanvas.Header>
             <hr />
             <Offcanvas.Body>
               <div className="offcanvas-container">
-                <Link className="hesabım" to ="/profile">Hesabım</Link><br />
-                <Link className="ayarlar">Ayarlar</Link><br />
-                <Button variant="danger" onClick={handleLogout}>Çıkış Yap</Button>
+                <Link className="hesabım" to="/profile">
+                  Hesabım
+                </Link>
+                <br />
+                <Link className="ayarlar">Ayarlar</Link>
+                <br />
+                <Button variant="danger" onClick={handleLogout}>
+                  Çıkış Yap
+                </Button>
               </div>
             </Offcanvas.Body>
           </Offcanvas>
         </div>
       </Stack>
 
-      <div className="mainPage" style={{ marginTop: "20px" }}>
-        {/* Kullanıcılar geldikçe slider bileşenlerini render etme */}
-        {users.map(user => (
-          <PersonImagesSlider
-            key={user._id}
-            userId={user._id}
-            username={user.username}
-          />
-        ))}
+      <div
+        className="user-carousel-container"
+        style={{
+          marginTop: "30px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "20px",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "150px",
+            width: "100%",
+          }}
+        >
+          <Button variant="secondary" onClick={prevUser}>
+            &#8249;
+          </Button>
 
-        {/* Yükle butonu - yükleniyor ise buton disable */}
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <Button onClick={loadMoreUsers} disabled={loading}>
-            {loading ? "Yükleniyor..." : "Daha Fazla Kullanıcı Yükle ↓"}
+          {users.length > 0 && (
+            <>
+              {/* Sol kullanıcı slider */}
+              {activeIndex > 0 ? (
+                <div className="user-preview">
+                  <PersonImagesSlider
+                    userId={users[activeIndex - 1]._id}
+                    isActive={false}
+                    showProfilePhoto={true}
+                    profilePhotoUrl="images/logo.png"
+                  />
+                  <p>{users[activeIndex - 1].username}</p>
+                </div>
+              ) : (
+                <div className="user-preview" />
+              )}
+
+              {/* Ortadaki aktif kullanıcı slider */}
+              <div
+                className="user-active"
+                style={{
+                  width: "600px",
+                  height: "400px",
+                  padding: "0",
+                  border: "2px solid #444",
+                  borderRadius: "8px",
+                  backgroundColor: "white",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                <PersonImagesSlider
+                  userId={users[activeIndex]._id}
+                  isActive={true}
+                />
+              </div>
+
+              {/* Sağ kullanıcı slider */}
+              {activeIndex < users.length - 1 ? (
+                <div className="user-preview">
+                  <PersonImagesSlider
+                    userId={users[activeIndex + 1]._id}
+                    isActive={false}
+                    showProfilePhoto={true}
+                    profilePhotoUrl="images/logo.png"
+                  />
+                  <p>{users[activeIndex + 1].username}</p>
+                </div>
+              ) : (
+                <div className="user-preview" />
+              )}
+            </>
+          )}
+
+          <Button variant="secondary" onClick={nextUser}>
+            &#8250;
           </Button>
         </div>
-      </div>
 
-     
-     
-     
-     
-     
-     
-      <footer style={{ marginTop: "40px", fontSize: "10px", color: "#888" }}>
-        <p>alt kısım bilgileri</p>
-      </footer>
+        {/* Aktif kullanıcının profil bilgisi */}
+        {users.length > 0 && (
+          <div
+            className="user-profile-info"
+            style={{
+              marginTop: "10px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src="images/logo.png"
+              alt="profil"
+              width={50}
+              height={50}
+              style={{ borderRadius: "50%" }}
+            />
+            <p style={{ fontWeight: "bold" }}>{users[activeIndex].username}</p>
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }

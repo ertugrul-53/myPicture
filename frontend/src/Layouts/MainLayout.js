@@ -18,7 +18,7 @@ import "./MainLayout.css";
   return (
 <div className="layout-container" style={{padding:"20px",
                                           fontFamily:"Arial",
-                                          backgroundImage:"url('/images/backround.jpg')",
+                                          backgroundImage:"url('/images/br-Grey6.jpg')",
                                           backgroundSize:"cover",
                                           backgroundRepeat: "no-repeat",
                                           backgroundPosition: "center",
