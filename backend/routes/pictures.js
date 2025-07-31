@@ -1,4 +1,3 @@
-// fotoğrafları listelemek için routlar
 import express from "express";
 import { ObjectId } from "mongodb";
 import { getDB } from "../index.js";
@@ -9,6 +8,7 @@ router.get("/", async (req, res) => {
   try {
     const db = getDB();
     const picturesCollection = db.collection("pictures");
+    const likesCollection = db.collection("likes");
 
     const userId = req.query.userId;
     const limit = parseInt(req.query.limit) || 5;
@@ -26,7 +26,20 @@ router.get("/", async (req, res) => {
       .limit(limit)
       .toArray();
 
-    res.json(pictures);
+    // Her resim için beğeni sayısını al
+    const picturesWithLikes = await Promise.all(
+      pictures.map(async (picture) => {
+       const likeCount = await likesCollection.countDocuments({ pictureId: picture._id.toHexString() });
+
+
+        return {
+          ...picture,
+          likeCount,
+        };
+      })
+    );
+
+    res.json(picturesWithLikes);
   } catch (error) {
     console.error("Fotoğraflar çekilemedi:", error);
     res.status(500).json({ message: "Sunucu hatası", error: error.message });

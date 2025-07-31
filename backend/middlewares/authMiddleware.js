@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 const secretKey = process.env.JWT_SECRET || "gizliAnahtar";
 
 export const authMiddleware = async (req, res, next) => {
+  
   try {
      const authHeader = req.headers["authorization"];
 console.log("Auth Header:", authHeader);
@@ -14,6 +15,7 @@ console.log("Auth Header:", authHeader);
     }
 
     const token = authHeader.split(" ")[1];
+    
 
     
     const decoded = jwt.verify(token, secretKey);

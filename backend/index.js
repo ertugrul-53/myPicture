@@ -11,6 +11,9 @@ import uploadRouter from "./routes/upload.js";
 import profileRoute from "./routes/profile.js";
 import deletePhotoRoute from "./routes/deletePhoto.js"
 
+import likesRouter from "./routes/like.js";
+
+
 
 
 const app =express();
@@ -28,7 +31,7 @@ app.use("/api/profile",profileRoute);
 app.use('/upload', express.static('upload'));
 app.use("/api", deletePhotoRoute)
 
-
+app.use("/api/likes", likesRouter);
 
 
 

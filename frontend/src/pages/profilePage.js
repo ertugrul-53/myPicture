@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Stack, Offcanvas, Button, FormSelect } from "react-bootstrap";
+import { Stack, Offcanvas, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
 import UploadPhotoForm from "../compononts/UploadPhotoForm.js";
 import "./profilePage.css";
-
-import Form from 'react-bootstrap/Form';
 
 function ProfilePage() {
   const [show, setShow] = useState(false);
@@ -35,16 +33,20 @@ function ProfilePage() {
     }
   };
 
-  // Kullanıcının fotoğraflarını çekme
+  // Kullanıcının fotoğraflarını ve beğeni sayılarını çekme
+  
   const fetchPhotos = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/profile/photos", {
+        
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        
       });
+      
 
       if (!response.ok) throw new Error("Fotoğraflar alınamadı");
 
@@ -79,6 +81,7 @@ function ProfilePage() {
           Authorization: `Bearer ${token}`,
         },
       });
+
       if (!response.ok) throw new Error("Silme işlemi başarısız");
 
       // Silme başarılı, fotoğraf listesini güncelle
@@ -99,7 +102,6 @@ function ProfilePage() {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-
         minHeight: "100vh",
       }}
     >
@@ -112,10 +114,8 @@ function ProfilePage() {
         </div>
 
         <div className="ms-auto d-flex align-items-center" style={{ gap: "40px" }}>
-
           {/* Fotoğraf Yükleme Bileşeni */}
           <UploadPhotoForm onUploadSuccess={fetchPhotos} userId={userData?._id} />
-
           <div onClick={handleShow} style={{ cursor: "pointer" }}>
             <BsPersonCircle size={50} color="black" />
           </div>
@@ -137,11 +137,8 @@ function ProfilePage() {
       </Stack>
       <hr />
 
-
-
       {/* Fotoğraflar */}
       <div style={{ marginTop: "20px" }}>
-
         {photos.length === 0 ? (
           <p>Henüz fotoğraf yok.</p>
         ) : (
@@ -165,6 +162,22 @@ function ProfilePage() {
                 >
                   ×
                 </button>
+
+                {/* ❤️ Beğeni Sayısı */}
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "10px",
+                    backgroundColor: "rgba(0, 0, 0, 0.6)",
+                    color: "white",
+                    padding: "4px 8px",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                  }}
+                >
+                  ❤️ {photo.likeCount || 0}
+                </div>
               </div>
             ))}
           </div>
