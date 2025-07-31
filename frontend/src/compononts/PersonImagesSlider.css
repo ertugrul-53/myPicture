@@ -172,18 +172,19 @@
   border: none;
   border-radius: 6px;
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   transition: 0.2s ease;
 }
 
 .like-button.liked {
+  
  
-  color: white;
+  color: rgb(27, 25, 25);
 }
 
 .follow-button.following {
   
-  color: white;
+  color: rgb(10, 10, 10);
 }
 
