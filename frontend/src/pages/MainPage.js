@@ -6,6 +6,7 @@ import "./MainPage.css";
 import { useEffect, useState } from "react";
 import { Button, Offcanvas } from "react-bootstrap";
 import PersonImagesSlider from "../compononts/PersonImagesSlider";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ export default function MainPage() {
         className="user-carousel-container"
         style={{
           marginTop: "30px",
-          
+          display: "flex",
           justifyContent: "center",
           alignItems: "center",
           gap: "20px",
@@ -107,17 +108,17 @@ export default function MainPage() {
         }}
       >
         <div
-        className="out-slider"
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            gap: "150px",
+            gap: "90px",
             width: "100%",
           }}
         >
+          {/* Sol buton */}
           <Button variant="secondary" onClick={prevUser}>
-            &#8249;
+            &#10094;
           </Button>
 
           {users.length > 0 && (
@@ -130,8 +131,8 @@ export default function MainPage() {
                     isActive={false}
                     showProfilePhoto={true}
                     profilePhotoUrl="images/logo.png"
+                    username={users[activeIndex - 1].username}
                   />
-                  <p>{users[activeIndex - 1].username}</p>
                 </div>
               ) : (
                 <div className="user-preview" />
@@ -141,8 +142,8 @@ export default function MainPage() {
               <div
                 className="user-active"
                 style={{
-                  width: "600px",
-                  height: "400px",
+                  width: "1000px",
+                  height: "470px",
                   padding: "0",
                   border: "2px solid #444",
                   borderRadius: "8px",
@@ -151,12 +152,30 @@ export default function MainPage() {
                   justifyContent: "center",
                   alignItems: "center",
                   position: "relative",
+                  overflow: "hidden",
                 }}
               >
-                <PersonImagesSlider
-                  userId={users[activeIndex]._id}
-                  isActive={true}
-                />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={users[activeIndex]._id}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.5 }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                  >
+                    <PersonImagesSlider
+                      userId={users[activeIndex]._id}
+                      isActive={true}
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
               {/* Sağ kullanıcı slider */}
@@ -167,8 +186,8 @@ export default function MainPage() {
                     isActive={false}
                     showProfilePhoto={true}
                     profilePhotoUrl="images/logo.png"
+                    username={users[activeIndex + 1].username}
                   />
-                  <p>{users[activeIndex + 1].username}</p>
                 </div>
               ) : (
                 <div className="user-preview" />
@@ -176,8 +195,9 @@ export default function MainPage() {
             </>
           )}
 
-          <Button variant="secondary" onClick={nextUser}>
-            &#8250;
+          {/* Sağ buton */}
+          <Button className="btn-secondary" variant="secondary" onClick={nextUser}>
+            &#10095;
           </Button>
         </div>
 

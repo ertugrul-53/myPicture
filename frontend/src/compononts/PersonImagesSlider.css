@@ -12,7 +12,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
   overflow: hidden;
   width: 100%;
   height: 100%;
@@ -23,38 +22,95 @@
   justify-content: center;
 }
 
-.slider-container-person.inactive {
-  justify-content: flex-start;
-  opacity: 1;
-  filter: grayscale(30%);
-}
-
-.slider-image-person {
-  border-radius: 10px;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-  flex-shrink: 0;
-}
-
 .slider-image-person.active {
-  width: 100%;
-  height: 100%;
+  width: 110%;
+  height: 110%;
+  max-width: none;
+  max-height: none;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(0, 0, 0);
-  user-select: none;
-  pointer-events: auto;
-  position: relative;
-  z-index: 5;
-}
-
-.slider-image-person.inactive {
-  width: 240px;
-  height: 200px;
-  filter: grayscale(30%);
+  object-fit: cover;
+  z-index: 1;
   user-select: none;
   pointer-events: none;
+}
+
+
+.thumbnail-wrapper {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  z-index: 5;
+  transform : translateX(-50%);
+}
+
+/* Thumbnail container: sadece küçük resimleri tutar */
+.thumbnail-container {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  display: flex;
+  gap: 6px;
+  background-color: transparent;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.slider-container-person.active:hover .thumbnail-container {
   opacity: 1;
- 
+  pointer-events: auto;
+}
+
+/* Thumbnail resimleri */
+.thumbnail-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: transform 0.2s, border 0.2s;
+  border: 2px solid transparent;
+}
+
+
+
+.thumbnail-image.selected {
+  border: 2px solid rgb(6, 5, 5);
+  opacity: 1;
+}
+
+
+.thumbnail-arrow {
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 50%;
+  margin: 0 6px;
+  transition: background 0.2s, opacity 0.3s ease;
+  user-select: none;
+  opacity: 0;            /* Tamamen görünmez */
+  pointer-events: none;  /* Tıklanamaz */
+}
+.slider-container-person.active:hover .thumbnail-container,
+.slider-container-person.active:hover .thumbnail-arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.thumbnail-arrow:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.thumbnail-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
 }
 
 /* Küçük profil fotoğrafı yan kullanıcılar için */
@@ -64,35 +120,7 @@
   height: 40px;
   margin-bottom: 8px;
   object-fit: cover;
-  box-shadow: 0 0 6px rgba(0,0,0,0.25);
-}
-
-.arrow {
-  background: rgba(0, 0, 0, 0.25);
-  border: none;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 5px 10px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  border-radius: 50%;
-  user-select: none;
-  transition: background 0.3s ease;
-}
-
-.arrow:hover {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.arrow.left {
-  left: 10px;
-}
-
-.arrow.right {
-  right: 10px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
 }
 
 .no-images {
@@ -101,3 +129,61 @@
   text-align: center;
   padding: 20px;
 }
+
+
+
+
+.slider-container-person {
+  position: relative;
+}
+
+/* Ortak stil: görünmez başlangıç */
+.like-button-wrapper,
+.follow-button-wrapper {
+  position: absolute;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Hover olduğunda görünür */
+.slider-container-person:hover .like-button-wrapper,
+.slider-container-person:hover .follow-button-wrapper {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Beğeni butonu sağ üst köşede */
+.like-button-wrapper {
+  top: 10px;
+  right: 10px;
+}
+
+/* Takip butonu sol üst köşede */
+.follow-button-wrapper {
+  top: 10px;
+  left: 10px;
+}
+
+.like-button,
+.follow-button {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.like-button.liked {
+ 
+  color: white;
+}
+
+.follow-button.following {
+  
+  color: white;
+}
+
