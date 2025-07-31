@@ -98,7 +98,7 @@ export default function MainPage() {
         className="user-carousel-container"
         style={{
           marginTop: "30px",
-          display: "flex",
+          
           justifyContent: "center",
           alignItems: "center",
           gap: "20px",
@@ -107,6 +107,7 @@ export default function MainPage() {
         }}
       >
         <div
+        className="out-slider"
           style={{
             display: "flex",
             justifyContent: "center",
