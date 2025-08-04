@@ -56,7 +56,7 @@ router.post("/register",async(req,res)=>{
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Şifre yanlış" });
     }
-
+//token üretme
     const token = jwt.sign(
   { 
     userId: user._id.toString(),  

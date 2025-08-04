@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { Button, Offcanvas } from "react-bootstrap";
 import PersonImagesSlider from "../compononts/PersonImagesSlider";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -48,6 +50,30 @@ export default function MainPage() {
     setActiveIndex((old) => (old === users.length - 1 ? 0 : old + 1));
   };
 
+
+
+// hangi sayfada olduğumuzu belirleyen fonsyon 
+function TopBar() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  return (
+    <div className="TopBar-buttons">
+      <button
+        className={`TopBar-button ${currentPath === "/main" ? "active" : ""}`}
+      >
+        MainPage
+      </button>
+
+      <button
+        className={`TopBar-button ${currentPath === "/follow" ? "active" : ""}`}
+      >
+        Follow
+      </button>
+    </div>
+  );
+}
+
   return (
     <div
       className="layout-container"
@@ -62,10 +88,21 @@ export default function MainPage() {
       }}
     >
       <Stack direction="horizontal" gap={3}>
+
+
         <div className="p-2 ">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
             <h1>myPictures</h1>
           </Link>
+        </div>
+
+        <div className="TopBar-buttons" >
+              <NavLink to="/main" className="TopBar-button">
+                MainPage
+              </NavLink>
+              <NavLink to="/follow" className="TopBar-button">
+                Follow
+              </NavLink> 
         </div>
 
         <div className="ms-auto ">
@@ -77,7 +114,7 @@ export default function MainPage() {
             <Offcanvas.Header>
               <Offcanvas.Title>myPictures</Offcanvas.Title>
             </Offcanvas.Header>
-            <hr />
+           
             <Offcanvas.Body>
               <div className="offcanvas-container">
                 <Link className="hesabım" to="/profile">
@@ -142,17 +179,18 @@ export default function MainPage() {
               <div
                 className="user-active"
                 style={{
-                  width: "1000px",
-                  height: "470px",
+                  width: "1300px",
+                  height: "480px",
                   padding: "0",
-                  border: "2px solid #444",
+                 
                   borderRadius: "8px",
-                  backgroundColor: "white",
+                  
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   position: "relative",
                   overflow: "hidden",
+                  
                 }}
               >
                 <AnimatePresence mode="wait">

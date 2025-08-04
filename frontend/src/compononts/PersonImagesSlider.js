@@ -183,7 +183,7 @@ export default function PersonImagesSlider({
           <button
             className="thumbnail-arrow left"
             onClick={thumbnailPrev}
-            disabled={thumbnailStartIndex === 0}
+            
             aria-label="Önceki"
           >
             &#8249;
@@ -210,7 +210,7 @@ export default function PersonImagesSlider({
           <button
             className="thumbnail-arrow right"
             onClick={thumbnailNext}
-            disabled={thumbnailStartIndex + THUMBNAIL_VISIBLE_COUNT >= images.length}
+            
             aria-label="Sonraki"
           >
             &#8250;

@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
     // Her resim için beğeni sayısını al
     const picturesWithLikes = await Promise.all(
       pictures.map(async (picture) => {
-       const likeCount = await likesCollection.countDocuments({ pictureId: picture._id.toHexString() });
+       const likeCount = await likesCollection.countDocuments({ pictureId: picture._id});
 
 
         return {

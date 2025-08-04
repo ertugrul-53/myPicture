@@ -56,6 +56,8 @@ function ProfilePage() {
       console.error("Fotoğraf alma hatası:", error.message);
     }
   };
+  
+
 
   useEffect(() => {
     fetchUserData();
@@ -125,7 +127,7 @@ function ProfilePage() {
           <Offcanvas.Header closeButton>
             <Offcanvas.Title>myPictures</Offcanvas.Title>
           </Offcanvas.Header>
-          <hr />
+          
           <Offcanvas.Body>
             <div className="offcanvas-container">
               <Link className="hesabım" to="/profile">Hesabım</Link><br />
@@ -135,7 +137,7 @@ function ProfilePage() {
           </Offcanvas.Body>
         </Offcanvas>
       </Stack>
-      <hr />
+     <hr></hr>
 
       {/* Fotoğraflar */}
       <div style={{ marginTop: "20px" }}>

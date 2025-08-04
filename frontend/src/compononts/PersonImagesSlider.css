@@ -20,19 +20,19 @@
 
 .slider-container-person.active {
   justify-content: center;
+  background-color: transparent;
+  
 }
 
 .slider-image-person.active {
-  width: 110%;
-  height: 110%;
-  max-width: none;
-  max-height: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(0, 0, 0);
-  object-fit: cover;
-  z-index: 1;
   user-select: none;
   pointer-events: none;
+  z-index: 1;
 }
 
 
@@ -95,8 +95,8 @@
   margin: 0 6px;
   transition: background 0.2s, opacity 0.3s ease;
   user-select: none;
-  opacity: 0;            /* Tamamen görünmez */
-  pointer-events: none;  /* Tıklanamaz */
+  opacity: 0;            
+  pointer-events: none;  
 }
 .slider-container-person.active:hover .thumbnail-container,
 .slider-container-person.active:hover .thumbnail-arrow {

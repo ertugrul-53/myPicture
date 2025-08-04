@@ -32,18 +32,30 @@ router.get('/', authMiddleware, async (req, res) => {
 
 router.get("/photos", authMiddleware, async (req, res) => {
   try {
-
-    
     const db = getDB();
-    const userId = req.user._id;  // authMiddleware'den gelen kullanıcı objesi
-    const photos = await db.collection("pictures").find({ userId: new ObjectId(userId) }).toArray();
+    const userId = req.user._id;
 
-    res.json(photos);
+    const pictures = await db.collection("pictures").find({ userId: new ObjectId(userId) }).toArray();
+    const likesCollection = db.collection("likes");
+
+    // Her fotoğraf için beğeni sayısını ekle( ProfilePgede beğeni sayılarını görmemi sağlıyo )
+    const photosWithLikes = await Promise.all(
+      pictures.map(async (photo) => {
+        const likeCount = await likesCollection.countDocuments({ pictureId: photo._id });
+        return {
+          ...photo,
+          likeCount,
+        };
+      })
+    );
+
+    res.json(photosWithLikes);
   } catch (error) {
     console.error("Profil fotoğrafları getirme hatası:", error);
     res.status(500).json({ message: "Sunucu hatası" });
   }
 });
+
 
 
 

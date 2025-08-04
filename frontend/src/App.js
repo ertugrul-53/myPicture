@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import MainPage from "./pages/MainPage";
 import ProfilePage from "./pages/profilePage";
 import { PhotoProvider } from "./contexts/PhotoContext";
+import FollowingPage from "./pages/FollowingPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               </Route>
           <Route path="main" element={<MainPage />}></Route>
           <Route path="profile" element={<ProfilePage/>} />
+          <Route path="follow" element={<FollowingPage/>}/>
           
       </Routes>
     </BrowserRouter>
