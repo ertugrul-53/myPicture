@@ -31,7 +31,7 @@ console.log("Auth Header:", authHeader);
     if (!user) {
       return res.status(401).json({ message: "Kullanıcı bulunamadı" });
     }
-
+    req.userId=userId;
     req.user = user;
     next();
   } catch (error) {

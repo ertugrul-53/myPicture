@@ -12,6 +12,7 @@ import profileRoute from "./routes/profile.js";
 import deletePhotoRoute from "./routes/deletePhoto.js"
 
 import likesRouter from "./routes/like.js";
+import followRouter from "./routes/followRouter.js";
 
 
 
@@ -33,7 +34,7 @@ app.use('/upload', express.static('upload'));
 app.use("/api", deletePhotoRoute)
 
 app.use("/api/likes", likesRouter);
-
+app.use("/api/follow",followRouter);
 
 //MongoDB
 const PORT = 5000;

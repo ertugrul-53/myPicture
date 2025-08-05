@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./PersonImagesSlider.css";
+import { jwtDecode } from "jwt-decode";
 
 export default function PersonImagesSlider({
   userId,
@@ -8,8 +9,6 @@ export default function PersonImagesSlider({
   profilePhotoUrl,
   username,
 }) {
-
-  // State değişkenleri 
   const [images, setImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [thumbnailStartIndex, setThumbnailStartIndex] = useState(0);
@@ -19,56 +18,115 @@ export default function PersonImagesSlider({
   const [likeCount, setLikeCount] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
 
-  function fetchLikeData(picture) {
-  if (!picture || !picture._id) return;
-
   const token = localStorage.getItem("token");
+  const currentUserId = token ? jwtDecode(token).userId : null;
 
-  // Beğeni sayısı
-  fetch(`http://localhost:5000/api/likes/count/${picture._id}`)
-    .then(res => res.json())
-    .then(data => {
-      setLikeCount(data.count || 0);
-    })
-    .catch(err => console.error("Like sayısı alınamadı", err));
+  // Takip durumunu backend'den kontrol eden useEffect
+  useEffect(() => {
+    const checkFollowStatus = async () => {
+      if (!currentUserId || !userId || currentUserId === userId) {
+        setIsFollowing(false);
+        return;
+      }
 
-  // Kullanıcının beğenip beğenmediği
-  fetch(`http://localhost:5000/api/likes/status/${picture._id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
+      try {
+        if (!token) return;
+
+        const res = await fetch(
+          `http://localhost:5000/api/follow/status?followingId=${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+        const data = await res.json();
+        setIsFollowing(data.isFollowing);
+      } catch (error) {
+        console.error("Takip durumu alınamadı", error);
+      }
+    };
+
+    checkFollowStatus();
+  }, [userId, currentUserId, token]);
+
+  const handleFollowToggle = async () => {
+    const endpoint = isFollowing
+      ? "http://localhost:5000/api/follow/unfollow"
+      : "http://localhost:5000/api/follow";
+
+    if (!token) {
+      console.warn("Token yok, işlem yapılmaz");
+      return;
     }
-  })
-    .then(res => res.json())
-    .then(data => {
-      setIsLiked(data.liked);
+
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ followerID: currentUserId, followingId: userId }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log(data.message);
+      setIsFollowing(!isFollowing);
+    } catch (err) {
+      console.error("Takip işlemi başarısız:", err);
+    }
+  };
+
+  function fetchLikeData(picture) {
+    if (!picture || !picture._id) return;
+
+    fetch(`http://localhost:5000/api/likes/count/${picture._id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setLikeCount(data.count || 0);
+      })
+      .catch((err) => console.error("Like sayısı alınamadı", err));
+
+    fetch(`http://localhost:5000/api/likes/status/${picture._id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .catch(err => console.error("Beğeni durumu alınamadı", err));
-}
+      .then((res) => res.json())
+      .then((data) => {
+        setIsLiked(data.liked);
+      })
+      .catch((err) => console.error("Beğeni durumu alınamadı", err));
+  }
 
-
-  // Beğeni durumunu backend ile toggle eden fonksiyon
   function toggleLike(pictureId) {
-    const token = localStorage.getItem("token"); // Token varsa al
-
     fetch("http://localhost:5000/api/likes/toggle", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Token ile gönder
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ 
-        userId, 
+      body: JSON.stringify({
+        userId,
         pictureId,
       }),
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.liked !== undefined) {
           setIsLiked(data.liked);
-          setLikeCount(prev => (data.liked ? prev + 1 : prev - 1));
+          setLikeCount((prev) => (data.liked ? prev + 1 : prev - 1));
         }
       })
-      .catch(err => console.error("Beğeni işlemi başarısız:", err));
+      .catch((err) => console.error("Beğeni işlemi başarısız:", err));
   }
 
   useEffect(() => {
@@ -77,11 +135,11 @@ export default function PersonImagesSlider({
     fetch(`http://localhost:5000/api/pictures?userId=${userId}&limit=20`)
       .then((res) => res.json())
       .then((data) => {
-        setImages(data); // tam obje dizisi olarak tutuyorum 
+        setImages(data);
         setCurrentIndex(0);
         setThumbnailStartIndex(0);
         if (data.length > 0) {
-          fetchLikeData(data[0]); // ilk fotograf için 
+          fetchLikeData(data[0]);
         }
       })
       .catch((err) => console.error("Fotoğraflar alınamadı", err));
@@ -126,11 +184,9 @@ export default function PersonImagesSlider({
           src={`http://localhost:5000${firstImage.imagePath}`}
           alt="İlk Fotoğraf"
           style={{ width: "280px", height: "280px", objectFit: "cover", borderRadius: "10px" }}
-          draggable={false} // sürükleme işlemini engeller
+          draggable={false}
         />
-        {showProfilePhoto && profilePhotoUrl && (
-          <img className="user-profile-small" src={profilePhotoUrl} alt="Profil" />
-        )}
+        {showProfilePhoto && profilePhotoUrl && <img className="user-profile-small" src={profilePhotoUrl} alt="Profil" />}
         {username && (
           <p
             style={{
@@ -159,7 +215,7 @@ export default function PersonImagesSlider({
           draggable={false}
         />
 
-        {/* Beğeni ve Takip butonları - RESMİN ÜZERİNDE */}
+        {/* Beğeni Butonu */}
         <div className="like-button-wrapper">
           <button
             className={`like-button ${isLiked ? "liked" : ""}`}
@@ -169,23 +225,15 @@ export default function PersonImagesSlider({
           </button>
         </div>
 
+        {/* Takip Butonu */}
         <div className="follow-button-wrapper">
-          <button
-            className={`follow-button ${isFollowing ? "following" : ""}`}
-            onClick={() => setIsFollowing(!isFollowing)}
-          >
+          <button className={`follow-button ${isFollowing ? "following" : ""}`} onClick={handleFollowToggle}>
             {isFollowing ? "Takibi Bırak" : "Takip Et"}
           </button>
         </div>
 
-        {/* Thumbnail Wrapper dış oklarla birlikte */}
         <div className="thumbnail-wrapper">
-          <button
-            className="thumbnail-arrow left"
-            onClick={thumbnailPrev}
-            
-            aria-label="Önceki"
-          >
+          <button className="thumbnail-arrow left" onClick={thumbnailPrev} aria-label="Önceki">
             &#8249;
           </button>
 
@@ -207,12 +255,7 @@ export default function PersonImagesSlider({
               })}
           </div>
 
-          <button
-            className="thumbnail-arrow right"
-            onClick={thumbnailNext}
-            
-            aria-label="Sonraki"
-          >
+          <button className="thumbnail-arrow right" onClick={thumbnailNext} aria-label="Sonraki">
             &#8250;
           </button>
         </div>

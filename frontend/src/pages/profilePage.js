@@ -5,6 +5,7 @@ import { BsPersonCircle } from "react-icons/bs";
 import UploadPhotoForm from "../compononts/UploadPhotoForm.js";
 import "./profilePage.css";
 
+
 function ProfilePage() {
   const [show, setShow] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -24,7 +25,10 @@ function ProfilePage() {
         },
       });
 
-      if (!response.ok) throw new Error("Kullanıcı verisi alınamadı");
+      if (!response.ok){
+                 throw new Error("Kullanıcı verisi alınamadı")
+                  navigate("./Lyouts/login"); //         token bitince loginPage e yönlendirme 
+                };
 
       const data = await response.json();
       setUserData(data);
@@ -165,7 +169,7 @@ function ProfilePage() {
                   ×
                 </button>
 
-                {/* ❤️ Beğeni Sayısı */}
+                {/*  Beğeni Sayısı */}
                 <div
                   style={{
                     position: "absolute",

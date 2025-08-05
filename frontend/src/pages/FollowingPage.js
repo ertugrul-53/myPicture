@@ -4,11 +4,16 @@ import { Link, NavLink } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
 import PersonImagesSlider from "../compononts/PersonImagesSlider";
+import "./FollowingPage.css";
+import ImageSlider from "../compononts/ImageSlider";
+import FollowSlider from "../compononts/FollowSlider";
 
-export default function FollowPage() {
+export default function FollowingPage() {
   const [show, setShow] = useState(false);
   const [users, setUsers] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [activTab,setActiveTab]=useState("following");
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -71,6 +76,7 @@ export default function FollowPage() {
           </NavLink>
         </div>
 
+
         <div className="ms-auto ">
           <div onClick={handleShow}>
             <BsPersonCircle size={40} color="black" />
@@ -98,7 +104,18 @@ export default function FollowPage() {
         </div>
       </Stack>
 
-      {/* Kullanıcı carousel kısmı */}
+              <div className="interaction-buttons">
+             <button className="following" onClick={() => setActiveTab("following")}>Following</button>
+            <button  className ="followers"onClick={() => setActiveTab("followers")}>Followers</button>
+        </div>
+        
+        <FollowSlider activeTab={activTab} />
+
+        
+        
+
+      
+
      
     </div>
   );

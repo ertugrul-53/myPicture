@@ -1,20 +1,20 @@
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import "./MainPage.css";
+import { useNavigate, Link, NavLink, useLocation } from "react-router-dom";
 import Stack from "react-bootstrap/Stack";
 import { BsPersonCircle } from "react-icons/bs";
-import "./MainPage.css";
-import { useEffect, useState } from "react";
 import { Button, Offcanvas } from "react-bootstrap";
 import PersonImagesSlider from "../compononts/PersonImagesSlider";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 
 export default function MainPage() {
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [show, setShow] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const limit = 10;
 
@@ -39,7 +39,6 @@ export default function MainPage() {
     navigate("/login");
   };
 
-  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -50,29 +49,89 @@ export default function MainPage() {
     setActiveIndex((old) => (old === users.length - 1 ? 0 : old + 1));
   };
 
+  // Token decode ederek userId'ye erişme
+  const token = localStorage.getItem("token");
 
+  let currentUserId = null;
+  if (token) {
+    const decode = jwtDecode(token);
+    currentUserId = decode.userId;
+  }
 
-// hangi sayfada olduğumuzu belirleyen fonsyon 
-function TopBar() {
-  const location = useLocation();
-  const currentPath = location.pathname;
+  // Takip durumu kontrolü
+  useEffect(() => {
+    const checkFollowStatus = async () => {
+      if (!currentUserId || users.length === 0) return;
 
-  return (
-    <div className="TopBar-buttons">
-      <button
-        className={`TopBar-button ${currentPath === "/main" ? "active" : ""}`}
-      >
-        MainPage
-      </button>
+      const targetUserId = users[activeIndex]._id;
+      if (currentUserId === targetUserId) return;
 
-      <button
-        className={`TopBar-button ${currentPath === "/follow" ? "active" : ""}`}
-      >
-        Follow
-      </button>
-    </div>
-  );
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/follow/status?followerID=${currentUserId}&followingId=${targetUserId}`
+        );
+        const data = await res.json();
+        setIsFollowing(data.isFollowing);
+      } catch (error) {
+        console.error("Takip durumu alınamadı", error);
+      }
+    };
+
+    checkFollowStatus();
+  }, [activeIndex, users, currentUserId]);
+
+  // Takip / takibi bırak fonksiyonu
+  const handleFollowToggle = async () => {
+    const targetUserId = users[activeIndex]._id;
+    const endpoint = isFollowing
+      ? "http://localhost:5000/api/follow/unfollow"
+      : "http://localhost:5000/api/follow";
+
+    try {
+       const token = localStorage.getItem("token");
+           if (!token) {
+  console.warn("Kullanıcı giriş yapmamış. Token yok.");
+  return;
 }
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          followerID: currentUserId,
+          followingId: targetUserId,
+        }),
+      });
+
+      const data = await res.json();
+      console.log(data.message);
+      setIsFollowing(!isFollowing);
+    } catch (err) {
+      console.error("Takip isteği hatası:", err);
+    }
+  
+
+
+  };
+
+  function TopBar() {
+    const location = useLocation();
+    const currentPath = location.pathname;
+
+    return (
+      <div className="TopBar-buttons">
+        <button className={`TopBar-button ${currentPath === "/main" ? "active" : ""}`}>
+          MainPage
+        </button>
+
+        <button className={`TopBar-button ${currentPath === "/follow" ? "active" : ""}`}>
+          Follow
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -88,21 +147,19 @@ function TopBar() {
       }}
     >
       <Stack direction="horizontal" gap={3}>
-
-
         <div className="p-2 ">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
             <h1>myPictures</h1>
           </Link>
         </div>
 
-        <div className="TopBar-buttons" >
-              <NavLink to="/main" className="TopBar-button">
-                MainPage
-              </NavLink>
-              <NavLink to="/follow" className="TopBar-button">
-                Follow
-              </NavLink> 
+        <div className="TopBar-buttons">
+          <NavLink to="/main" className="TopBar-button">
+            MainPage
+          </NavLink>
+          <NavLink to="/follow" className="TopBar-button">
+            Follow
+          </NavLink>
         </div>
 
         <div className="ms-auto ">
@@ -114,7 +171,7 @@ function TopBar() {
             <Offcanvas.Header>
               <Offcanvas.Title>myPictures</Offcanvas.Title>
             </Offcanvas.Header>
-           
+
             <Offcanvas.Body>
               <div className="offcanvas-container">
                 <Link className="hesabım" to="/profile">
@@ -182,15 +239,12 @@ function TopBar() {
                   width: "1300px",
                   height: "480px",
                   padding: "0",
-                 
                   borderRadius: "8px",
-                  
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   position: "relative",
                   overflow: "hidden",
-                  
                 }}
               >
                 <AnimatePresence mode="wait">
@@ -208,10 +262,7 @@ function TopBar() {
                       left: 0,
                     }}
                   >
-                    <PersonImagesSlider
-                      userId={users[activeIndex]._id}
-                      isActive={true}
-                    />
+                    <PersonImagesSlider userId={users[activeIndex]._id} isActive={true} />
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -259,6 +310,17 @@ function TopBar() {
             />
             <p style={{ fontWeight: "bold" }}>{users[activeIndex].username}</p>
           </div>
+        )}
+
+        {/* Takip Et / Takibi Bırak butonu */}
+        {users.length > 0 && currentUserId !== users[activeIndex]._id && (
+          <Button
+            variant={isFollowing ? "danger" : "primary"}
+            onClick={handleFollowToggle}
+            style={{ marginTop: "10px" }}
+          >
+            {isFollowing ? "Takibi Bırak" : "Takip Et"}
+          </Button>
         )}
       </div>
     </div>
