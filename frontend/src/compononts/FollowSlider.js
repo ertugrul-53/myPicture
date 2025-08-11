@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import PersonImagesSlider from "./PersonImagesSlider";
 import { jwtDecode } from "jwt-decode";
+import "./FollowSlider.css";
 
 export default function FollowSlider({ activeTab }) {
   const [users, setUsers] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
   const token = localStorage.getItem("token");
-  const currentUserId = token ? jwtDecode(token).userId : null;
+  const currentUserId = token ? jwtDecode(token)?.userId : null;
 
   useEffect(() => {
     if (!token || !currentUserId) return;
@@ -16,50 +15,70 @@ export default function FollowSlider({ activeTab }) {
         ? `http://localhost:5000/api/follow/following/${currentUserId}`
         : `http://localhost:5000/api/follow/followers/${currentUserId}`;
 
-    fetch(endpoint, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch(endpoint, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
         setUsers(data || []);
-        setActiveIndex(0);
-      })
-      .catch((err) => console.error("Takip verisi alınamadı:", err));
-  }, [activeTab, currentUserId]);
+      } catch (err) {
+        console.error("Takip verisi alınamadı:", err);
+      }
+    };
 
-  const prevUser = () => {
-    setActiveIndex((prev) => Math.max(prev - 1, 0));
+    fetchUsers();
+  }, [activeTab, currentUserId, token]);
+
+  const handleUnfollow = async (followingId) => {
+    if (!token) {
+      alert("Lütfen giriş yapınız.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/follow/unfollow", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ followingId }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log(data.message);
+
+      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== followingId));
+    } catch (error) {
+      console.error("Takip bırakma işlemi başarısız:", error);
+    }
   };
 
-  const nextUser = () => {
-    setActiveIndex((prev) => Math.min(prev + 1, users.length - 1));
-  };
-
-  if (users.length === 0) {
+  if (!users.length) {
     return <p style={{ textAlign: "center", marginTop: 20 }}>Hiç kullanıcı bulunamadı.</p>;
   }
 
-  const activeUser = users[activeIndex];
-
   return (
-    <div style={{ marginTop: 30, textAlign: "center" }}>
-      <button onClick={prevUser} disabled={activeIndex === 0}>
-        ◀
-      </button>
-
-      <PersonImagesSlider
-        userId={activeUser._id}
-        isActive={true}
-        showProfilePhoto={true}
-        profilePhotoUrl={activeUser.profilePhotoUrl}
-        username={activeUser.username}
-      />
-
-      <button onClick={nextUser} disabled={activeIndex === users.length - 1}>
-        ▶
-      </button>
+    <div className="follow-list-simple">
+      {users.map((user) => (
+        <div key={user._id} className="follow-user-simple">
+          <img
+            src="images/logo.png"
+            alt={`${user.username} profil`}
+            className="follow-photo-simple"
+          />
+          <div className="follow-name-simple">{user.username}</div>
+          <button className="unfollow-button" onClick={() => handleUnfollow(user._id)}>
+                Unfollow
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

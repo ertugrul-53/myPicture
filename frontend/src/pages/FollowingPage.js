@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Stack, Offcanvas, Button } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
-import { motion, AnimatePresence } from "framer-motion";
 import PersonImagesSlider from "../compononts/PersonImagesSlider";
 import "./FollowingPage.css";
 import ImageSlider from "../compononts/ImageSlider";
@@ -12,8 +11,7 @@ export default function FollowingPage() {
   const [show, setShow] = useState(false);
   const [users, setUsers] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [activTab,setActiveTab]=useState("following");
-
+  const [activeTab, setActiveTab] = useState("following");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -76,7 +74,6 @@ export default function FollowingPage() {
           </NavLink>
         </div>
 
-
         <div className="ms-auto ">
           <div onClick={handleShow}>
             <BsPersonCircle size={40} color="black" />
@@ -104,19 +101,24 @@ export default function FollowingPage() {
         </div>
       </Stack>
 
-              <div className="interaction-buttons">
-             <button className="following" onClick={() => setActiveTab("following")}>Following</button>
-            <button  className ="followers"onClick={() => setActiveTab("followers")}>Followers</button>
-        </div>
-        
-        <FollowSlider activeTab={activTab} />
+      {/* Tab buttons */}
+      <div className="interaction-buttons">
+        <button
+          className={activeTab === "following" ? "active-tab" : ""}
+          onClick={() => setActiveTab("following")}
+        >
+          Following
+        </button>
+        <button
+          className={activeTab === "followers" ? "active-tab" : ""}
+          onClick={() => setActiveTab("followers")}
+        >
+          Followers
+        </button>
+      </div>
 
-        
-        
-
-      
-
-     
+      {/* Slider */}
+      <FollowSlider activeTab={activeTab} />
     </div>
   );
 }

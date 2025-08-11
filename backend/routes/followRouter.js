@@ -1,6 +1,7 @@
 import express from "express";
 import { getDB } from "../index.js";
-import {authMiddleware} from "../middlewares/authMiddleware.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
@@ -77,18 +78,54 @@ router.get("/status", authMiddleware, async (req, res) => {
   }
 });
 
-
 // Kullanıcının takip ettiklerini getir
-router.get('/follow/following/:userId', async (req, res) => {
-  const following = await Follow.find({ followerID: req.params.userId }).populate('followingId', 'username profilePhotoUrl');
-  res.json(following.map(f => f.followingId));
+router.get('/following/:userId', async (req, res) => {
+  try {
+    const db = getDB();
+    const followCollection = db.collection("follows");
+    const usersCollection = db.collection("users");
+
+    const followingDocs = await followCollection
+      .find({ followerID: req.params.userId })
+      .toArray();
+
+    const followingIds = followingDocs.map(f => f.followingId);
+
+    const users = await usersCollection
+      .find({ _id: { $in: followingIds.map(id => new ObjectId(id)) } })
+      .project({ username: 1, profilePhotoUrl: 1 })
+      .toArray();
+
+    res.json(users);
+  } catch (error) {
+    console.error("Following getirme hatası:", error);
+    res.status(500).json({ message: "Sunucu hatası." });
+  }
 });
 
 // Kullanıcıyı takip edenleri getir
-router.get('/follow/followers/:userId', async (req, res) => {
-  const followers = await Follow.find({ followingId: req.params.userId }).populate('followerID', 'username profilePhotoUrl');
-  res.json(followers.map(f => f.followerID));
-});
+router.get('/followers/:userId', async (req, res) => {
+  try {
+    const db = getDB();
+    const followCollection = db.collection("follows");
+    const usersCollection = db.collection("users");
 
+    const followerDocs = await followCollection
+      .find({ followingId: req.params.userId })
+      .toArray();
+
+    const followerIds = followerDocs.map(f => f.followerID);
+
+    const users = await usersCollection
+      .find({ _id: { $in: followerIds.map(id => new ObjectId(id)) } })
+      .project({ username: 1, profilePhotoUrl: 1 })
+      .toArray();
+
+    res.json(users);
+  } catch (error) {
+    console.error("Followers getirme hatası:", error);
+    res.status(500).json({ message: "Sunucu hatası." });
+  }
+});
 
 export default router;

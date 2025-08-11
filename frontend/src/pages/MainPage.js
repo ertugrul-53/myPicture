@@ -8,6 +8,7 @@ import PersonImagesSlider from "../compononts/PersonImagesSlider";
 import { motion, AnimatePresence } from "framer-motion";
 import {jwtDecode} from "jwt-decode";
 
+
 export default function MainPage() {
   const navigate = useNavigate();
 
@@ -312,16 +313,7 @@ export default function MainPage() {
           </div>
         )}
 
-        {/* Takip Et / Takibi Bırak butonu */}
-        {users.length > 0 && currentUserId !== users[activeIndex]._id && (
-          <Button
-            variant={isFollowing ? "danger" : "primary"}
-            onClick={handleFollowToggle}
-            style={{ marginTop: "10px" }}
-          >
-            {isFollowing ? "Takibi Bırak" : "Takip Et"}
-          </Button>
-        )}
+        
       </div>
     </div>
   );
