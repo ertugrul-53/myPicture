@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Offcanvas, Stack, Button } from "react-bootstrap";
 import { BsPersonCircle } from "react-icons/bs";
@@ -7,68 +7,46 @@ import "./SettingsPage.css";
 export default function SettingsPage() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [profileImage, setProfileImage] = useState("/default-profile.png");
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",      // boş bırakılırsa değişmez
+    profilePhotoUrl: ""// resim yolu
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [preview, setPreview] = useState(""); // yeni seçilen resim önizleme
 
   const token = localStorage.getItem("token");
 
-  // Kullanıcı bilgilerini çek
-  const fetchUserData = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/user/me", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error("Kullanıcı bilgisi alınamadı");
-      const data = await res.json();
-      setName(data.name);
-      setEmail(data.email);
-      if (data.profileImage) {
-        setProfileImage(data.profileImage);
-      }
-    } catch (err) {
-      console.error(err);
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      return;
     }
-  };
-
-  // Profil resmi değiştiğinde
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-    setProfileImage(URL.createObjectURL(file));
-  };
-
-  // Kaydet
-  const handleSave = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("email", email);
-      if (password) formData.append("password", password);
-      if (selectedFile) formData.append("profileImage", selectedFile);
-
-      const res = await fetch("http://localhost:5000/api/user/update", {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        alert("Bilgiler kaydedildi!");
-        fetchUserData();
-      } else {
-        alert(data.message || "Güncelleme başarısız");
+    const fetchMe = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/settings", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Yetkisiz veya hata");
+        const data = await res.json();
+        setForm({
+          username: data.username || "",
+          email: data.email || "",
+          password: "",
+          profilePhotoUrl: data.profilePhotoUrl || "",
+        });
+      } catch (e) {
+        console.error(e);
+        alert("Kullanıcı bilgileri alınamadı.");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    };
+    fetchMe();
+  }, [token, navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -77,9 +55,65 @@ export default function SettingsPage() {
     navigate("/login");
   };
 
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  // Profil resmi yükleme -> /api/upload (mevcut upload router’ını yeniden kullanıyoruz)
+  const onSelectFile = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // canlı önizleme
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+
+    // upload
+    const fd = new FormData();
+    fd.append("image", file);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/upload", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      });
+      if (!res.ok) throw new Error("Yükleme hatası");
+      const data = await res.json();
+      // upload router’ın döndürdüğü alan ismi sende genelde imagePath
+      // ör: { imagePath: "/upload/abc.jpg" }
+      setForm((f) => ({ ...f, profilePhotoUrl: data.imagePath }));
+    } catch (err) {
+      console.error(err);
+      alert("Profil resmi yüklenemedi.");
+    }
+  };
+
+  const onSave = async () => {
+    setSaving(true);
+    try {
+      const res = await fetch("http://localhost:5000/api/settings", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Güncelleme hatası");
+      alert("Bilgiler güncellendi.");
+      // şifre alanını temizle
+      setForm((f) => ({ ...f, password: "" }));
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <div className="settings-loading">Yükleniyor…</div>;
 
   return (
     <div
@@ -94,83 +128,90 @@ export default function SettingsPage() {
         minHeight: "100vh",
       }}
     >
-      {/* Üst Bar */}
       <Stack direction="horizontal" gap={3}>
         <div className="p-2">
-          <Link
-            className="settings-logo"
-            to="/main"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            myPicture
-          </Link>
+          <Link className="settings-logo" to="/main">myPicture</Link>
         </div>
 
-        <div className="ms-auto ">
-          <div onClick={handleShow}>
+        <div className="ms-auto">
+          <div onClick={() => setShow(true)}>
             <BsPersonCircle size={40} color="black" />
           </div>
 
-          <Offcanvas show={show} onHide={handleClose} placement="end">
+          <Offcanvas show={show} onHide={() => setShow(false)} placement="end">
             <Offcanvas.Header>
               <Offcanvas.Title>myPicture</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
               <div className="offcanvas-container">
-                <Link className="hesabım" to="/profile">
-                  Hesabım
-                </Link>
+                <Link className="hesabım" to="/profile">Hesabım</Link>
                 <br />
-                <Link className="ayarlar" to="/settings">
-                  Ayarlar
-                </Link>
+                <Link className="ayarlar" to="/settings">Ayarlar</Link>
                 <br />
-                <Button variant="danger" onClick={handleLogout}>
-                  Çıkış Yap
-                </Button>
+                <Button variant="danger" onClick={handleLogout}>Çıkış Yap</Button>
               </div>
             </Offcanvas.Body>
           </Offcanvas>
         </div>
       </Stack>
 
-      {/* Ayarlar Kartı */}
-      <div className="settings-container">
-        <div className="settings-card">
-          {/* Profil Resmi */}
-          <div className="profile-image-wrapper">
-            <img src={profileImage} alt="Profil" className="profile-image" />
+      {/* Ortadaki kart */}
+      <div className="settings-card">
+        <div className="settings-photo-area">
+          <img
+            src={
+              preview
+                ? preview
+                : form.profilePhotoUrl
+                ? `http://localhost:5000${form.profilePhotoUrl}`
+                : "/images/logo.png"
+            }
+            alt="profil"
+            className="settings-photo"
+          />
+          <label className="settings-upload-btn">
+            Profil Resmi Seç
+            <input type="file" accept="image/*" onChange={onSelectFile} hidden />
+          </label>
+        </div>
+
+        <div className="settings-fields">
+          <div className="settings-field">
+            <label>Kullanıcı Adı</label>
             <input
-              type="file"
-              accept="image/*"
-              id="profile-upload"
-              onChange={handleImageChange}
-              style={{ display: "none" }}
+              name="username"
+              value={form.username}
+              onChange={onChange}
+              placeholder="Kullanıcı adı"
             />
-            <label htmlFor="profile-upload" className="change-photo-btn">
-              Fotoğrafı Değiştir
-            </label>
           </div>
 
-          {/* Bilgi Formu */}
-          <div className="settings-form">
-            <label>İsim</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} />
-
-            <label>Email</label>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} />
-
-            <label>Şifre</label>
+          <div className="settings-field">
+            <label>E-posta</label>
             <input
-              type="password"
-              placeholder="Yeni şifre girin"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={onChange}
+              placeholder="E-posta"
             />
+          </div>
 
-            <button className="save-btn" onClick={handleSave}>
-              Kaydet
-            </button>
+          <div className="settings-field">
+            <label>Yeni Şifre (opsiyonel)</label>
+            <input
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={onChange}
+              placeholder="Yeni şifre"
+            />
+          </div>
+
+          <div className="settings-actions">
+            <Button disabled={saving} onClick={onSave}>
+              {saving ? "Kaydediliyor…" : "Kaydet"}
+            </Button>
           </div>
         </div>
       </div>
