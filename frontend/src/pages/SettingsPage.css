@@ -1,0 +1,104 @@
+.ms-auto {
+  position: relative;
+  text-decoration: none;
+  padding-right: 30px;
+  transition: 0.3s;
+  padding-bottom: 10px;
+}
+.settings-logo {
+  font-size: 40px;
+  color: black;
+  text-decoration: none;
+  
+}
+
+
+
+
+
+
+
+.ms-auto:hover::after {
+  width: 100%;
+}
+
+.offcanvas-body {
+  background-color: rgba(205, 201, 201, 0.782);
+  backdrop-filter: blur(10px);
+}
+
+.offcanvas-header {
+  background-color: rgb(214, 209, 208);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.settings-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.settings-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+
+.profile-image-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ccc;
+}
+
+.change-photo-btn {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.settings-form label {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.settings-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+.save-btn {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+

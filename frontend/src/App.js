@@ -8,6 +8,7 @@ import MainPage from "./pages/MainPage";
 import ProfilePage from "./pages/profilePage";
 import { PhotoProvider } from "./contexts/PhotoContext";
 import FollowingPage from "./pages/FollowingPage";
+import SettingsPage from "./pages/SettingsPage";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
           <Route path="main" element={<MainPage />}></Route>
           <Route path="profile" element={<ProfilePage/>} />
           <Route path="follow" element={<FollowingPage/>}/>
-          
+          <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </BrowserRouter>
     </PhotoProvider>

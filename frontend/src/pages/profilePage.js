@@ -135,7 +135,7 @@ function ProfilePage() {
           <Offcanvas.Body>
             <div className="offcanvas-container">
               <Link className="hesabım" to="/profile">Hesabım</Link><br />
-              <Link className="ayarlar" to="#">Ayarlar</Link><br />
+              <Link className="ayarlar" to="/settings">Ayarlar</Link><br />
               <Button variant="danger" onClick={handleLogout}>Çıkış Yap</Button>
             </div>
           </Offcanvas.Body>

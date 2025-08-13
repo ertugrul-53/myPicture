@@ -147,6 +147,8 @@ export default function MainPage() {
         minHeight: "100vh",
       }}
     >
+
+
       <Stack direction="horizontal" gap={3}>
         <div className="p-2 ">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
@@ -168,27 +170,33 @@ export default function MainPage() {
             <BsPersonCircle size={40} color="black" />
           </div>
 
-          <Offcanvas show={show} onHide={handleClose} placement="end">
-            <Offcanvas.Header>
-              <Offcanvas.Title>myPictures</Offcanvas.Title>
-            </Offcanvas.Header>
 
-            <Offcanvas.Body>
-              <div className="offcanvas-container">
-                <Link className="hesabım" to="/profile">
-                  Hesabım
-                </Link>
-                <br />
-                <Link className="ayarlar">Ayarlar</Link>
-                <br />
-                <Button variant="danger" onClick={handleLogout}>
-                  Çıkış Yap
-                </Button>
-              </div>
-            </Offcanvas.Body>
-          </Offcanvas>
+                  <Offcanvas show={show} onHide={handleClose} placement="end">
+                    <Offcanvas.Header>
+                      <Offcanvas.Title>myPictures</Offcanvas.Title>
+                    </Offcanvas.Header>
+
+                    <Offcanvas.Body>
+                      <div className="offcanvas-container">
+                        <Link className="hesabım" to="/profile">
+                          Hesabım
+                        </Link>
+                        <br />
+                        <Link className="ayarlar" to = "/settings">
+                        Ayarlar
+                        </Link>
+                        <br />
+                        <Button variant="danger" onClick={handleLogout}>
+                          Çıkış Yap
+                        </Button>
+                      </div>
+                    </Offcanvas.Body>
+                  </Offcanvas>
         </div>
       </Stack>
+
+
+
 
       <div
         className="user-carousel-container"
