@@ -152,7 +152,7 @@ export default function MainPage() {
       <Stack direction="horizontal" gap={3}>
         <div className="p-2 ">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
-            <h1>myPictures</h1>
+            <h1 className="myPicture">myPictures</h1>
           </Link>
         </div>
 
@@ -226,70 +226,89 @@ export default function MainPage() {
 
           {users.length > 0 && (
             <>
-              {/* Sol kullanıcı slider */}
-              {activeIndex > 0 ? (
-                <div className="user-preview">
-                  <PersonImagesSlider
-                    userId={users[activeIndex - 1]._id}
-                    isActive={false}
-                    showProfilePhoto={true}
-                    profilePhotoUrl="images/logo.png"
-                    username={users[activeIndex - 1].username}
-                  />
-                </div>
-              ) : (
-                <div className="user-preview" />
-              )}
-
-              {/* Ortadaki aktif kullanıcı slider */}
-              <div
-                className="user-active"
-                style={{
-                  width: "1300px",
-                  height: "480px",
-                  padding: "0",
-                  borderRadius: "8px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={users[activeIndex]._id}
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.5 }}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                    }}
-                  >
-                    <PersonImagesSlider userId={users[activeIndex]._id} isActive={true} />
-                  </motion.div>
-                </AnimatePresence>
+             
+            {/* Sol kullanıcı slider */}
+            {activeIndex > 0 ? (
+              <div className="user-preview">
+                <PersonImagesSlider
+                  userId={users[activeIndex - 1]._id}
+                  isActive={false}
+                  showProfilePhoto={true}
+                  profilePhotoUrl={
+                    users[activeIndex - 1].profilePhotoUrl
+                      ? `http://localhost:5000${users[activeIndex - 1].profilePhotoUrl}`
+                      : "/images/logo.png"
+                  }
+                  username={users[activeIndex - 1].username}
+                />
               </div>
+            ) : (
+              <div className="user-preview" />
+            )}
 
-              {/* Sağ kullanıcı slider */}
-              {activeIndex < users.length - 1 ? (
-                <div className="user-preview">
+            {/* Ortadaki aktif kullanıcı slider */}
+            <div
+              className="user-active"
+              style={{
+                width: "1300px",
+                height: "450px",
+                padding: "0",
+                borderRadius: "8px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={users[activeIndex]._id}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.5 }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                >
                   <PersonImagesSlider
-                    userId={users[activeIndex + 1]._id}
-                    isActive={false}
+                    userId={users[activeIndex]._id}
+                    isActive={true}
                     showProfilePhoto={true}
-                    profilePhotoUrl="images/logo.png"
-                    username={users[activeIndex + 1].username}
+                    profilePhotoUrl={
+                      users[activeIndex].profilePhotoUrl
+                        ? `http://localhost:5000${users[activeIndex].profilePhotoUrl}`
+                        : "/images/logo.png"
+                    }
                   />
-                </div>
-              ) : (
-                <div className="user-preview" />
-              )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Sağ kullanıcı slider */}
+            {activeIndex < users.length - 1 ? (
+              <div className="user-preview">
+                <PersonImagesSlider
+                  userId={users[activeIndex + 1]._id}
+                  isActive={false}
+                  showProfilePhoto={true}
+                  profilePhotoUrl={
+                    users[activeIndex + 1].profilePhotoUrl
+                      ? `http://localhost:5000${users[activeIndex + 1].profilePhotoUrl}`
+                      : "/images/logo.png"
+                  }
+                  username={users[activeIndex + 1].username}
+                />
+              </div>
+            ) : (
+              <div className="user-preview" />
+            )}
+
             </>
           )}
 
@@ -311,7 +330,11 @@ export default function MainPage() {
             }}
           >
             <img
-              src="images/logo.png"
+              src={
+    users[activeIndex].profilePhotoUrl
+      ? `http://localhost:5000${users[activeIndex].profilePhotoUrl}`
+      : "/images/logo.png"
+  }
               alt="profil"
               width={50}
               height={50}

@@ -1,9 +1,9 @@
 .settings-logo {
-  font-size: 28px;
-  font-weight: 800;
+  font-size: 45px;
   text-decoration: none;
   color: black;
 }
+
 
 .settings-loading {
   display: grid;
@@ -14,7 +14,7 @@
 
 .settings-card {
   max-width: 900px;
-  margin: 40px auto 0;
+  margin: 100px auto 0;
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 24px;
@@ -41,7 +41,16 @@
   object-fit: cover;
   border-radius: 50%;
   border: 4px solid rgba(255,255,255,0.7);
+  transition: 0.3s;
 }
+.settings-photo:hover{
+  width: 300px;
+  height: 300px;
+  border-radius: 0%;
+  transition: 0.3s;
+  border-color:rgb(237, 89, 3); ;
+}
+
 
 .settings-upload-btn {
   display: inline-block;
@@ -51,6 +60,10 @@
   color: #fff;
   cursor: pointer;
   font-size: 14px;
+}
+.settings-upload-btn:hover{
+  background-color: rgb(237, 89, 3);
+
 }
 
 .settings-fields {
@@ -77,4 +90,12 @@
 
 .settings-actions {
   margin-top: 8px;
+}
+.btn-primary{
+  background-color:  #222;
+  border: none;
+
+}
+.btn-primary:hover{
+  background-color: rgb(237, 89, 3);
 }

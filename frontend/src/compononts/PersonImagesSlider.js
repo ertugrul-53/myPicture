@@ -160,6 +160,10 @@ export default function PersonImagesSlider({
   };
 
   if (!images.length)
+
+
+
+
     return (
       <div className="no-images">
         <p>Fotoğraf bulunamadı</p>
@@ -179,8 +183,9 @@ export default function PersonImagesSlider({
           marginTop: 8,
         }}
       >
-        <img
-          className="slider-image-person inactive"
+        {/** yan sliderlar active olmayan  */}
+
+        <img className="slider-image-person inactive"
           src={`http://localhost:5000${firstImage.imagePath}`}
           alt="İlk Fotoğraf"
           style={{ width: "280px", height: "280px", objectFit: "cover", borderRadius: "10px" }}
@@ -204,9 +209,14 @@ export default function PersonImagesSlider({
     );
   }
 
+
+  
+
   return (
     <div className="slider-wrapper-person">
-      <div className="slider-container-person active">
+      {/* aktif slider */ }
+
+      <div className="slider-container-person active"> 
         <img
           className="slider-image-person active"
           src={`http://localhost:5000${images[currentIndex].imagePath}`}
@@ -255,9 +265,9 @@ export default function PersonImagesSlider({
               })}
           </div>
 
-          <button className="thumbnail-arrow right" onClick={thumbnailNext} aria-label="Sonraki">
-            &#8250;
-          </button>
+        <button className="thumbnail-arrow right" onClick={thumbnailNext} aria-label="Sonraki">
+          &#8250;
+        </button>
         </div>
       </div>
 

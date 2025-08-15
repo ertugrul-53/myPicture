@@ -31,6 +31,7 @@ app.use("/api/users", usersRouter);
 app.use("/api",authRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/profile",profileRoute);
+app.use('/uploads', express.static('upload'));
 app.use('/upload', express.static('upload'));
 app.use("/api", deletePhotoRoute)
 

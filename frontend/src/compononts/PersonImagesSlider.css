@@ -85,18 +85,19 @@
 
 
 .thumbnail-arrow {
-  background: rgba(0, 0, 0, 0.5);
+background-color: rgba(85, 80, 80, 0.9); /* açık ve zarif */
   border: none;
-  color: white;
-  font-size: 20px;
+  color: #ffffff; /* klasik koyu ok rengi */
+  font-size: 22px;
   cursor: pointer;
   padding: 6px 10px;
-  border-radius: 50%;
+  border-radius: 6px; /* hafif köşeli, çok yuvarlak değil */
   margin: 0 6px;
-  transition: background 0.2s, opacity 0.3s ease;
+  transition: background-color 0.2s, transform 0.2s, color 0.2s, opacity 0.3s;
   user-select: none;
   opacity: 0;            
-  pointer-events: none;  
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* hafif gölge */ 
 }
 .slider-container-person.active:hover .thumbnail-container,
 .slider-container-person.active:hover .thumbnail-arrow {

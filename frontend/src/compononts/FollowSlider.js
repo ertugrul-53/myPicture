@@ -69,13 +69,17 @@ export default function FollowSlider({ activeTab }) {
       {users.map((user) => (
         <div key={user._id} className="follow-user-simple">
           <img
-            src="images/logo.png"
+            src={
+              user.profilePhotoUrl
+                ? `http://localhost:5000${user.profilePhotoUrl}`
+                : "/images/default-avatar.png"
+            }
             alt={`${user.username} profil`}
             className="follow-photo-simple"
           />
           <div className="follow-name-simple">{user.username}</div>
           <button className="unfollow-button" onClick={() => handleUnfollow(user._id)}>
-                Unfollow
+            Unfollow
           </button>
         </div>
       ))}

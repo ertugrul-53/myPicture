@@ -11,15 +11,17 @@ export default function SettingsPage() {
   const [form, setForm] = useState({
     username: "",
     email: "",
-    password: "",      // boş bırakılırsa değişmez
-    profilePhotoUrl: ""// resim yolu
+    password: "",
+    profilePhotoUrl: ""
   });
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [preview, setPreview] = useState(""); // yeni seçilen resim önizleme
+  const [preview, setPreview] = useState("");
 
   const token = localStorage.getItem("token");
 
+  // Kullanıcı bilgilerini çek
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -60,29 +62,30 @@ export default function SettingsPage() {
     setForm((f) => ({ ...f, [name]: value }));
   };
 
-  // Profil resmi yükleme -> /api/upload (mevcut upload router’ını yeniden kullanıyoruz)
+  // Profil resmi yükleme
   const onSelectFile = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // canlı önizleme
+    // Önizleme
     const url = URL.createObjectURL(file);
     setPreview(url);
 
-    // upload
     const fd = new FormData();
     fd.append("image", file);
 
     try {
-      const res = await fetch("http://localhost:5000/api/upload", {
+      const res = await fetch("http://localhost:5000/api/upload/profile", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }, // Content-Type ekleme
         body: fd,
       });
+
       if (!res.ok) throw new Error("Yükleme hatası");
+
       const data = await res.json();
-      // upload router’ın döndürdüğü alan ismi sende genelde imagePath
-      // ör: { imagePath: "/upload/abc.jpg" }
+      if (!data.imagePath) throw new Error("Sunucu resim yolu göndermedi");
+
       setForm((f) => ({ ...f, profilePhotoUrl: data.imagePath }));
     } catch (err) {
       console.error(err);
@@ -90,6 +93,7 @@ export default function SettingsPage() {
     }
   };
 
+  // Bilgileri kaydet
   const onSave = async () => {
     setSaving(true);
     try {
@@ -101,10 +105,11 @@ export default function SettingsPage() {
         },
         body: JSON.stringify(form),
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Güncelleme hatası");
+
       alert("Bilgiler güncellendi.");
-      // şifre alanını temizle
       setForm((f) => ({ ...f, password: "" }));
     } catch (err) {
       alert(err.message);
@@ -155,7 +160,7 @@ export default function SettingsPage() {
         </div>
       </Stack>
 
-      {/* Ortadaki kart */}
+      {/* Profil Ayar Kartı */}
       <div className="settings-card">
         <div className="settings-photo-area">
           <img
@@ -198,7 +203,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="settings-field">
-            <label>Yeni Şifre (opsiyonel)</label>
+            <label>Yeni Şifre</label>
             <input
               name="password"
               type="password"

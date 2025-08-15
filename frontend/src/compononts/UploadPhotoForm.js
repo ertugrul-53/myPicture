@@ -1,24 +1,43 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { Modal, Button } from "react-bootstrap";
-import "./UploadPhotoForm.css"
+import Cropper from "react-easy-crop";
+import getCroppedImg from "./cropImage";
+import "./UploadPhotoForm.css";
 
 function UploadPhotoForm({ onUploadSuccess }) {
   const [message, setMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [showModal, setShowModal] = useState(false); // modal kontrolü
+  const [imageSrc, setImageSrc] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1); // Zoom state eklendi
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
+
+  const ASPECT = 1350 / 700; // Slider ölçü oranı
+
+  const onCropComplete = useCallback((_, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
+
     setSelectedFile(file);
-    setMessage(""); // önceki mesajı temizle
+    setMessage("");
+
+    const reader = new FileReader();
+    reader.onload = () => setImageSrc(reader.result);
+    reader.readAsDataURL(file);
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) {
-      setMessage("Lütfen önce bir dosya seçin.");
+    if (!imageSrc || !croppedAreaPixels) {
+      setMessage("Lütfen önce bir fotoğraf seçip kırpın.");
       return;
     }
 
@@ -38,35 +57,59 @@ function UploadPhotoForm({ onUploadSuccess }) {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("photo", selectedFile);
-    formData.append("userId", currentUserId);
-
     try {
-      const response = await axios.post("http://localhost:5000/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      setIsUploading(true);
+
+      // Kırpılmış resmi al
+      const croppedBlob = await getCroppedImg(
+        imageSrc,
+        croppedAreaPixels,
+        1300,
+        700
+      );
+
+      const formData = new FormData();
+      formData.append("photo", croppedBlob, "photo.jpg");
+      formData.append("userId", currentUserId);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       console.log("Upload response:", response);
-      if (onUploadSuccess) {
-        await onUploadSuccess();
-      }
+      onUploadSuccess && (await onUploadSuccess());
 
-      setMessage(" Yükleme başarılı!");
+      setMessage("Yükleme başarılı!");
       setSelectedFile(null);
-      setTimeout(() => setShowModal(false), 1500); // 1.5 saniye sonra modal kapansın
+      setImageSrc(null);
+      setZoom(1); // Zoom sıfırla
+      setCrop({ x: 0, y: 0 }); // Crop sıfırla
+      setTimeout(() => setShowModal(false), 1500);
     } catch (err) {
       console.error("Yükleme hatası:", err);
-      setMessage(" Yükleme başarısız.");
+      setMessage("Yükleme başarısız.");
+    } finally {
+      setIsUploading(false);
     }
+  };
+
+  const handleCancel = () => {
+    setSelectedFile(null);
+    setImageSrc(null);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setShowModal(false);
   };
 
   return (
     <div className="upload-form">
-      {/*  İkon */}
       <button
         onClick={() => setShowModal(true)}
         style={{
@@ -89,23 +132,54 @@ function UploadPhotoForm({ onUploadSuccess }) {
         </svg>
       </button>
 
-      {/*  Modal Penceresi */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal className="custom-modal" show={showModal} onHide={handleCancel} centered size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>📸 Fotoğraf Yükle</Modal.Title>
+          <Modal.Title> Fotoğraf Yükle</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <input type="file" onChange={handleFileChange} ref={fileInputRef} />
-          {selectedFile && <p>Seçilen: {selectedFile.name}</p>}
-          {message && <p>{message}</p>}
+          {!imageSrc && (
+            <>
+              <input
+              className="input"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                ref={fileInputRef}
+              />
+              {selectedFile && <p>Seçilen: {selectedFile.name}</p>}
+            </>
+          )}
+          {imageSrc && (
+            <div style={{ position: "relative", width: "100%", height: 500 }}>
+                <Cropper
+                image={imageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={ASPECT}          // 1300 / 480 sabit
+                cropShape="rect"
+                showGrid={true}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+                restrictPosition={false} // crop penceresini fotoğrafın üzerinde serbest hareket ettirebilmek için
+                />
+            </div>
+          )}
+          {message && <p style={{ marginTop: 10 }}>{message}</p>}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button variant="secondary" onClick={handleCancel}>
             Vazgeç
           </Button>
-          <Button variant="primary" onClick={handleUpload}>
-            Yükle
-          </Button>
+          {imageSrc ? (
+            <Button variant="primary" onClick={handleUpload} disabled={isUploading}>
+              {isUploading ? "Yükleniyor..." : "Kaydet"}
+            </Button>
+          ) : (
+            <Button variant="primary" onClick={() => fileInputRef.current?.click()}>
+              Fotoğraf Seç
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </div>

@@ -9,6 +9,7 @@
 
 
 
+
 .ms-auto:hover::after {
   width: 100%;
 }
@@ -105,7 +106,7 @@
   
   backdrop-filter: blur(10px);                 
   -webkit-backdrop-filter: blur(10px); 
-border: 2px solid #575757;        
+      
 
 }
 
