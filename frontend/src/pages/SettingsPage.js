@@ -89,7 +89,7 @@ export default function SettingsPage() {
       setForm((f) => ({ ...f, profilePhotoUrl: data.imagePath }));
     } catch (err) {
       console.error(err);
-      alert("Profil resmi yüklenemedi.");
+     
     }
   };
 
@@ -124,7 +124,7 @@ export default function SettingsPage() {
     <div
       className="layout-container"
       style={{
-        padding: "20px",
+        padding: "0px",
         fontFamily: "Arial",
         backgroundImage: "url('/images/br-Grey6.jpg')",
         backgroundSize: "cover",
@@ -133,9 +133,9 @@ export default function SettingsPage() {
         minHeight: "100vh",
       }}
     >
-      <Stack direction="horizontal" gap={3}>
+      <Stack className="topbar" direction="horizontal" gap={3}>
         <div className="p-2">
-          <Link className="settings-logo" to="/main">myPicture</Link>
+          <Link className="myPicture" to="/main" style={{ textDecoration: "none", color: "black" }}>myPictures</Link>
         </div>
 
         <div className="ms-auto">
@@ -145,7 +145,7 @@ export default function SettingsPage() {
 
           <Offcanvas show={show} onHide={() => setShow(false)} placement="end">
             <Offcanvas.Header>
-              <Offcanvas.Title>myPicture</Offcanvas.Title>
+              <Offcanvas.Title>myPictures</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
               <div className="offcanvas-container">

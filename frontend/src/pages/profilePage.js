@@ -5,6 +5,7 @@ import { BsPersonCircle } from "react-icons/bs";
 import UploadPhotoForm from "../compononts/UploadPhotoForm.js";
 import "./profilePage.css";
 
+
 function ProfilePage() {
   const [show, setShow] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -24,10 +25,10 @@ function ProfilePage() {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Kullanıcı verisi alınamadı");
-        navigate("./Lyouts/login"); // token bitince loginPage e yönlendirme
-      }
+      if (!response.ok){
+                 throw new Error("Kullanıcı verisi alınamadı")
+                  navigate("./Lyouts/login"); //         token bitince loginPage e yönlendirme 
+                };
 
       const data = await response.json();
       setUserData(data);
@@ -36,16 +37,20 @@ function ProfilePage() {
     }
   };
 
-  // Kullanıcının fotoğraflarını çekme
+  // Kullanıcının fotoğraflarını ve beğeni sayılarını çekme
+  
   const fetchPhotos = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/profile/photos", {
+        
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        
       });
+      
 
       if (!response.ok) throw new Error("Fotoğraflar alınamadı");
 
@@ -55,6 +60,8 @@ function ProfilePage() {
       console.error("Fotoğraf alma hatası:", error.message);
     }
   };
+  
+
 
   useEffect(() => {
     fetchUserData();
@@ -83,6 +90,7 @@ function ProfilePage() {
 
       if (!response.ok) throw new Error("Silme işlemi başarısız");
 
+      // Silme başarılı, fotoğraf listesini güncelle
       setPhotos((prevPhotos) => prevPhotos.filter((p) => p._id !== photoId));
     } catch (error) {
       console.error("Fotoğraf silme hatası:", error);
@@ -94,7 +102,7 @@ function ProfilePage() {
     <div
       className="layout-container"
       style={{
-        padding: "20px",
+        padding: "0px",
         fontFamily: "Arial",
         backgroundImage: "url('/images/br-Grey6.jpg')",
         backgroundSize: "cover",
@@ -104,42 +112,26 @@ function ProfilePage() {
       }}
     >
       {/* Üst Menü */}
-      <Stack direction="horizontal" gap={3} className="align-items-center">
+      <Stack direction="horizontal" gap={3} className="topbar">
         <div className="p-2">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
-            <h1>{userData?.username}</h1>
+            <h1 className="myPicture">{userData?.username}</h1>
           </Link>
         </div>
 
         <div className="ms-auto d-flex align-items-center" style={{ gap: "40px" }}>
           {/* Fotoğraf Yükleme Bileşeni */}
           <UploadPhotoForm onUploadSuccess={fetchPhotos} userId={userData?._id} />
-
-          {/* Profil Fotoğrafı (offcanvas açan buton) */}
           <div onClick={handleShow} style={{ cursor: "pointer" }}>
-            {userData && userData.profilePhotoUrl ? (
-              <img
-                src={`http://localhost:5000${userData.profilePhotoUrl}`}
-                alt="Profil Fotoğrafı"
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                  border: "2px solid #ccc",
-                }}
-              />
-            ) : (
-              <BsPersonCircle size={50} color="black" />
-            )}
+            <BsPersonCircle size={50} color="black" />
           </div>
         </div>
 
         <Offcanvas show={show} onHide={handleClose} placement="end">
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>myPictures {userData?.username}</Offcanvas.Title>
+            <Offcanvas.Title>myPictures</Offcanvas.Title>
           </Offcanvas.Header>
-
+          
           <Offcanvas.Body>
             <div className="offcanvas-container">
               <Link className="hesabım" to="/profile">Hesabım</Link><br />
@@ -149,7 +141,7 @@ function ProfilePage() {
           </Offcanvas.Body>
         </Offcanvas>
       </Stack>
-      <hr />
+     
 
       {/* Fotoğraflar */}
       <div style={{ marginTop: "20px" }}>
@@ -177,7 +169,7 @@ function ProfilePage() {
                   ×
                 </button>
 
-                {/* Beğeni Sayısı */}
+                {/*  Beğeni Sayısı */}
                 <div
                   style={{
                     position: "absolute",

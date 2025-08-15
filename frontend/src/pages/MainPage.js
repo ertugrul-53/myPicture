@@ -138,7 +138,7 @@ export default function MainPage() {
     <div
       className="layout-container"
       style={{
-        padding: "20px",
+        padding: "0px",
         fontFamily: "Arial",
         backgroundImage: "url('/images/br-Grey6.jpg')",
         backgroundSize: "cover",
@@ -149,7 +149,7 @@ export default function MainPage() {
     >
 
 
-      <Stack direction="horizontal" gap={3}>
+      <Stack  className ="topbar"direction="horizontal" gap={3}>
         <div className="p-2 ">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
             <h1 className="myPicture">myPictures</h1>
@@ -165,34 +165,54 @@ export default function MainPage() {
           </NavLink>
         </div>
 
-        <div className="ms-auto ">
-          <div onClick={handleShow}>
-            <BsPersonCircle size={40} color="black" />
+        <div className="ms-auto">
+          <div onClick={handleShow} style={{ cursor: "pointer" }}>
+            {users.length > 0 && currentUserId ? (
+              // Kullanıcının kendi profil fotoğrafı varsa göster
+              <img
+                src={
+                  users.find((u) => u._id === currentUserId)?.profilePhotoUrl
+                    ? `http://localhost:5000${users.find((u) => u._id === currentUserId).profilePhotoUrl}`
+                    : "/images/logo.png" // varsayılan foto
+                }
+                alt="Profil Fotoğrafı"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  border: "2px solid #000",
+                }}
+              />
+            ) : (
+              // Eğer kullanıcı yoksa icon göster
+              <BsPersonCircle size={40} color="black" />
+            )}
           </div>
 
+          <Offcanvas show={show} onHide={handleClose} placement="end">
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>myPictures</Offcanvas.Title>
+            </Offcanvas.Header>
 
-                  <Offcanvas show={show} onHide={handleClose} placement="end">
-                    <Offcanvas.Header>
-                      <Offcanvas.Title>myPictures</Offcanvas.Title>
-                    </Offcanvas.Header>
-
-                    <Offcanvas.Body>
-                      <div className="offcanvas-container">
-                        <Link className="hesabım" to="/profile">
-                          Hesabım
-                        </Link>
-                        <br />
-                        <Link className="ayarlar" to = "/settings">
-                        Ayarlar
-                        </Link>
-                        <br />
-                        <Button variant="danger" onClick={handleLogout}>
-                          Çıkış Yap
-                        </Button>
-                      </div>
-                    </Offcanvas.Body>
-                  </Offcanvas>
+            <Offcanvas.Body>
+              <div className="offcanvas-container">
+                <Link className="hesabım" to="/profile">
+                  Hesabım
+                </Link>
+                <br />
+                <Link className="ayarlar" to="/settings">
+                  Ayarlar
+                </Link>
+                <br />
+                <Button variant="danger" onClick={handleLogout}>
+                  Çıkış Yap
+                </Button>
+              </div>
+            </Offcanvas.Body>
+          </Offcanvas>
         </div>
+
       </Stack>
 
 

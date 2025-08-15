@@ -72,7 +72,7 @@ export default function FollowSlider({ activeTab }) {
             src={
               user.profilePhotoUrl
                 ? `http://localhost:5000${user.profilePhotoUrl}`
-                : "/images/default-avatar.png"
+                :  "/images/logo.png"
             }
             alt={`${user.username} profil`}
             className="follow-photo-simple"

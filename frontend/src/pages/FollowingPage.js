@@ -48,7 +48,7 @@ export default function FollowingPage() {
     <div
       className="layout-container"
       style={{
-        padding: "20px",
+        padding: "0px",
         fontFamily: "Arial",
         backgroundImage: "url('/images/br-Grey6.jpg')",
         backgroundSize: "cover",
@@ -58,10 +58,10 @@ export default function FollowingPage() {
       }}
     >
       {/* TopBar */}
-      <Stack direction="horizontal" gap={3}>
+      <Stack className ="topbar" direction="horizontal" gap={3}>
         <div className="p-2 ">
           <Link to="/main" style={{ textDecoration: "none", color: "black" }}>
-            <h1>myPictures</h1>
+            <h1 className="myPicture">myPictures</h1>
           </Link>
         </div>
 

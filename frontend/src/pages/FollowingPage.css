@@ -3,7 +3,16 @@
   font-weight: bold;
   padding-bottom: 4px;
   
+  
 }
+.myPicture{
+    font-size: 45px;
+    text-decoration: none;
+    color: black;
+    margin-left: 10px;
+  }
+
+
 
 .interaction-buttons button {
   background: none;
