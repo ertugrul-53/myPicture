@@ -140,7 +140,7 @@ export default function SettingsPage() {
 
         <div className="ms-auto">
           <div onClick={() => setShow(true)}>
-            <BsPersonCircle size={40} color="black" />
+            <BsPersonCircle size={55} color="black" />
           </div>
 
           <Offcanvas show={show} onHide={() => setShow(false)} placement="end">

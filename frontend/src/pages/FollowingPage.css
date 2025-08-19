@@ -1,10 +1,4 @@
-.active-tab {
-  
-  font-weight: bold;
-  padding-bottom: 4px;
-  
-  
-}
+
 .myPicture{
     font-size: 45px;
     text-decoration: none;
@@ -14,15 +8,31 @@
 
 
 
+.interaction-buttons {
+  display: flex;
+  gap: 20px;
+  margin-left: 50px;
+  
+}
+
 .interaction-buttons button {
   background: none;
   border: none;
+  padding: 10px 0;
   font-size: 16px;
-  padding: 10px 15px;
   cursor: pointer;
- 
+  color: #555;
+  border-bottom: 2px solid transparent; /* Boş alt çizgi */
+  transition: border-color 0.3s, color 0.3s;
 }
 
 .interaction-buttons button:hover {
-  border-bottom: 2px solid gray;
+  color: #000;
 }
+
+.interaction-buttons .active-tab {
+  color: #000;
+  border-bottom: 2px solid rgb(218, 83, 16); /* Aktif tab alt çizgisi */
+}
+
+

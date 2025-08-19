@@ -177,11 +177,12 @@ export default function MainPage() {
                 }
                 alt="Profil Fotoğrafı"
                 style={{
-                  width: "40px",
-                  height: "40px",
+                  width: "55px",
+                  height: "55px",
                   borderRadius: "50%",
                   objectFit: "cover",
-                  border: "2px solid #000",
+                  boxShadow : "0 2px 8px"
+                  
                 }}
               />
             ) : (
