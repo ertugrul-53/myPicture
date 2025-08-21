@@ -1,0 +1,15 @@
+stages :
+  -build
+  -test
+build_job:
+  stage : build
+  script: 
+      -echo "bild başarılı"
+      -npm install 
+      -npm run build
+test_job:
+  stage : test
+  script:
+      -echo "test başatılı"
+      -npm test
+              
