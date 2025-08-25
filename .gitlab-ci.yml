@@ -6,7 +6,7 @@ build_job:
   stage: build
   script:
     - echo "build başarılı"
-    - npm install 
+    - npm install
     - npm run build
 
 test_job:
