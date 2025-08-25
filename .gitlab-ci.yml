@@ -10,6 +10,6 @@ build_job:
 test_job:
   stage : test
   script:
-      -echo "test başatılı"
+      -echo "test başarılı"
       -npm test
               
