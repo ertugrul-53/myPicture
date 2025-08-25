@@ -1,15 +1,16 @@
-stages :
-  -build
-  -test
+stages:
+  - build
+  - test
+
 build_job:
-  stage : build
-  script: 
-      -echo "bild başarılı"
-      -npm install 
-      -npm run build
-test_job:
-  stage : test
+  stage: build
   script:
-      -echo "test başarılı"
-      -npm test
-              
+    - echo "build başarılı"
+    - npm install 
+    - npm run build
+
+test_job:
+  stage: test
+  script:
+    - echo "test başarılı"
+    - npm test
