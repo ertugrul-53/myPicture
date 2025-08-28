@@ -1,7 +1,13 @@
 import express from "express";
 import cors from "cors";  
-import { MongoClient } from "mongodb";
+import { MongoClient, GridFSBucket } from "mongodb";
 import dotenv from "dotenv";
+
+dotenv.config();
+const app = express();
+
+app.use(cors());
+app.use(express.json());
 
 // API uçları
 import authRouter from "./routes/auth.js";
@@ -14,12 +20,6 @@ import likesRouter from "./routes/like.js";
 import followRouter from "./routes/followRouter.js";
 import settingsRouter from "./routes/settings.js";
 
-dotenv.config();
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
 // ROUTES
 app.use("/api/pictures", picturesRouter);
 app.use("/api/users", usersRouter);
@@ -31,24 +31,22 @@ app.use("/api/likes", likesRouter);
 app.use("/api/follow", followRouter);
 app.use("/api/settings", settingsRouter);
 
-// Static klasörler
-app.use('/uploads', express.static('upload'));
-app.use('/upload', express.static('upload'));
-
 // MongoDB Bağlantısı
 const PORT = process.env.PORT || 5000;
 const mongoURL = process.env.MONGO_URL || "mongodb://mongo:27017/myPictures";
 
 let db;
+let gfsBucket;
 
 async function connectMongo() {
     try {
         const client = await MongoClient.connect(mongoURL);
         db = client.db("myPictures");
+        gfsBucket = new GridFSBucket(db, { bucketName: "photos" });
         console.log("MongoDB'ye bağlandı ✅");
     } catch (err) {
         console.error("MongoDB'ye bağlanamadı ❌", err);
-        process.exit(1); // Bağlanamazsa uygulamayı kapat
+        process.exit(1); 
     }
 }
 
@@ -61,7 +59,11 @@ connectMongo().then(() => {
     });
 });
 
-// DB fonksiyonu
+// DB ve GridFS fonksiyonları
 export function getDB() {
     return db;
+}
+
+export function getGFSBucket() {
+    return gfsBucket;
 }
